@@ -1,0 +1,65 @@
+import { Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router";
+
+interface Step4Props {
+  referenceNumber: string;
+  formData: {
+    documentType: string;
+    fullName: string;
+    address: string;
+  };
+}
+
+export function Step4Success({ referenceNumber, formData }: Step4Props) {
+  const navigate = useNavigate();
+
+  return (
+    <div className="flex flex-col items-center justify-start text-center animate-in zoom-in-95 duration-500 py-8">
+      <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center mb-6">
+        <Check className="w-8 h-8 text-white" />
+      </div>
+
+      <h2 className="text-2xl font-bold text-gray-900 mb-4">Request Submitted!</h2>
+      
+      <p className="text-gray-600 text-sm mb-8 max-w-[320px] mx-auto leading-relaxed">
+        Natanggap na namin ang iyong request. Paki-save ang iyong Reference Number para ma-track ang status nito.
+      </p>
+
+      <div className="border-2 border-dashed border-primary rounded-xl p-6 mb-8 w-full">
+        <p className="text-xs font-bold text-gray-500 tracking-wider mb-2 uppercase">Reference Number</p>
+        <p className="text-3xl font-bold text-primary">{referenceNumber}</p>
+      </div>
+
+      <div className="bg-white border border-gray-200 rounded-xl p-6 w-full text-left mb-8">
+        <h3 className="font-bold text-gray-900 mb-4">Request Summary</h3>
+        
+        <div className="space-y-4">
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Uri ng Dokumento</p>
+            <p className="font-medium text-gray-900 capitalize">{formData.documentType.replace(/-/g, " ")}</p>
+          </div>
+          
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Pangalan</p>
+            <p className="font-medium text-gray-900">{formData.fullName}</p>
+          </div>
+          
+          <div>
+            <p className="text-xs text-gray-500 mb-1">Address</p>
+            <p className="font-medium text-gray-900">{formData.address}</p>
+          </div>
+        </div>
+      </div>
+
+      <div className="w-full">
+        <Button
+          onClick={() => navigate(`/track?id=${referenceNumber}`)}
+          className="w-full h-12 text-base rounded-md"
+        >
+          I-track ang Request
+        </Button>
+      </div>
+    </div>
+  );
+}
