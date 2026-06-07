@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
@@ -29,6 +29,7 @@ const COUNTRY_CODES = [
 
 export function VerifyPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [phone, setPhone] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("Philippines");
   const [isLoading, setIsLoading] = useState(false);
@@ -50,7 +51,7 @@ export function VerifyPage() {
       await api.auth.sendOtp({ phone_number: fullPhoneNumber });
       
       toast.success("Verification code sent successfully!");
-      navigate('/verify-otp', { state: { phone: fullPhoneNumber } });
+      navigate('/verify-otp', { state: { phone: fullPhoneNumber, next: location.state?.next } });
     } catch (error: any) {
       toast.error(error.message || "Failed to send code.");
     } finally {
@@ -60,7 +61,7 @@ export function VerifyPage() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[calc(100vh-250px)]">
-      <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-[480px]">
+      <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-md border border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           I-verify ang iyong numero
         </h2>
@@ -74,17 +75,23 @@ export function VerifyPage() {
               Cellphone Number
             </label>
             <div className="flex overflow-hidden rounded-md border border-gray-300 focus-within:border-primary focus-within:ring-1 focus-within:ring-primary transition-all">
-              <select
-                value={selectedCountry}
-                onChange={(e) => setSelectedCountry(e.target.value)}
-                className="bg-white px-3 py-2 text-gray-600 border-r border-gray-300 outline-none text-sm appearance-none cursor-pointer focus:bg-gray-50"
-              >
-                {COUNTRY_CODES.map((item) => (
-                  <option key={item.country} value={item.country}>
-                    {item.code} ({item.country})
-                  </option>
-                ))}
-              </select>
+              <div className="relative flex items-center justify-center w-24 border-r border-gray-300 bg-white hover:bg-gray-50 transition-colors">
+                <span className="text-gray-600 text-base font-medium">
+                  {COUNTRY_CODES.find(c => c.country === selectedCountry)?.code}
+                </span>
+                <select
+                  value={selectedCountry}
+                  onChange={(e) => setSelectedCountry(e.target.value)}
+                  className="absolute inset-0 opacity-0 cursor-pointer w-full"
+                  title="Select Country Code"
+                >
+                  {COUNTRY_CODES.map((item) => (
+                    <option key={item.country} value={item.country}>
+                      {item.code} ({item.country})
+                    </option>
+                  ))}
+                </select>
+              </div>
               <input
                 id="phone"
                 type="tel"
@@ -92,7 +99,7 @@ export function VerifyPage() {
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="917 123 4567"
                 disabled={isLoading}
-                className="flex-1 px-4 py-2 outline-none w-full disabled:opacity-50"
+                className="flex-1 px-4 py-3 outline-none w-full disabled:opacity-50 text-base"
               />
             </div>
           </div>

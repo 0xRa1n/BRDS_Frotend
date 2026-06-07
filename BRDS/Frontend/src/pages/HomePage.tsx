@@ -3,7 +3,15 @@ import { FeatureCard } from "@/components/home/FeatureCard";
 import { Laptop, MessageSquare, Clock } from "lucide-react";
 import placeholderImg from "@/assets/img/placeholder.jpeg";
 
+import { Navigate } from "react-router";
+
 export function HomePage() {
+  const token = localStorage.getItem("jwt_token");
+
+  if (token) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   return (
     <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
       <HeroSection />

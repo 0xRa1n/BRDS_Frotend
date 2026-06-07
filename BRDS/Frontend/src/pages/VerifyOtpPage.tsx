@@ -83,7 +83,7 @@ export function VerifyOtpPage() {
       }
 
       toast.success("Verification successful!");
-      navigate('/request');
+      navigate(location.state?.next || '/dashboard');
     } catch (error: any) {
       toast.error(error.message || "Invalid verification code.");
     } finally {
@@ -99,7 +99,7 @@ export function VerifyOtpPage() {
 
   return (
     <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[calc(100vh-250px)]">
-      <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-[480px]">
+      <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-md border border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
           Ilagay ang Verification Code
         </h2>

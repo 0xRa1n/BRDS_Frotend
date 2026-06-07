@@ -107,5 +107,20 @@ export const api = {
       }
       return response.json();
     },
+    getList: async (page = 1, limit = 10) => {
+      const headers = getAuthHeaders();
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/request?page=${page}&limit=${limit}`,
+        {
+          method: "GET",
+          headers,
+        },
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to fetch requests");
+      }
+      return response.json();
+    },
   },
 };

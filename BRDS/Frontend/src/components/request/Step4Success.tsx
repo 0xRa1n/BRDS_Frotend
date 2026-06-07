@@ -52,10 +52,17 @@ export function Step4Success({ referenceNumber, formData }: Step4Props) {
         </div>
       </div>
 
-      <div className="w-full">
+      <div className="flex flex-col sm:flex-row gap-4 w-full">
         <Button
-          onClick={() => navigate(`/track?id=${referenceNumber}`)}
-          className="w-full h-12 text-base rounded-md"
+          variant="outline"
+          onClick={() => navigate('/dashboard')}
+          className="flex-1 h-12 text-base rounded-md border-gray-200 text-gray-700"
+        >
+          Bumalik sa Dashboard
+        </Button>
+        <Button
+          onClick={() => navigate(`/track/${referenceNumber}`)}
+          className="flex-1 h-12 text-base rounded-md"
         >
           I-track ang Request
         </Button>

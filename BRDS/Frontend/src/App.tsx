@@ -6,6 +6,9 @@ import { HomePage } from "@/pages/HomePage";
 import { VerifyPage } from "@/pages/VerifyPage";
 import { VerifyOtpPage } from "@/pages/VerifyOtpPage";
 import { DocumentRequestPage } from "@/pages/DocumentRequestPage";
+import { TrackSearchPage } from "@/pages/TrackSearchPage";
+import { TrackRequestPage } from "@/pages/TrackRequestPage";
+import { DashboardPage } from "@/pages/DashboardPage";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 
 function App() {
@@ -19,6 +22,9 @@ function App() {
             <Route path="/" element={<HomePage />} />
             <Route path="/verify" element={<VerifyPage />} />
             <Route path="/verify-otp" element={<VerifyOtpPage />} />
+            <Route path="/track" element={<TrackSearchPage />} />
+            <Route path="/track/:id" element={<TrackRequestPage />} />
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route 
               path="/request" 
               element={
