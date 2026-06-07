@@ -9,6 +9,7 @@ import { DocumentRequestPage } from "@/pages/DocumentRequestPage";
 import { TrackSearchPage } from "@/pages/TrackSearchPage";
 import { TrackRequestPage } from "@/pages/TrackRequestPage";
 import { DashboardPage } from "@/pages/DashboardPage";
+import { AllRequestsPage } from "@/pages/AllRequestsPage";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 
 function App() {
@@ -25,6 +26,14 @@ function App() {
             <Route path="/track" element={<TrackSearchPage />} />
             <Route path="/track/:id" element={<TrackRequestPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route 
+              path="/dashboard/requests" 
+              element={
+                <AuthGuard>
+                  <AllRequestsPage />
+                </AuthGuard>
+              } 
+            />
             <Route 
               path="/request" 
               element={

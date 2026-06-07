@@ -10,7 +10,7 @@ interface VerifyOtpRequest {
 interface ProfileUpdateRequest {
   full_name: string;
   address: string;
-  date_of_birth: string;
+  date_of_birth?: string;
 }
 
 const getAuthHeaders = () => {

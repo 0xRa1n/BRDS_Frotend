@@ -13,8 +13,9 @@ export function Header() {
 
   useEffect(() => {
     if (token) {
-      api.user.getProfile()
-        .then(res => setProfile(res))
+      api.user
+        .getProfile()
+        .then((res) => setProfile(res))
         .catch(() => {
           // Silent catch, let dashboard handle auth errors
         });
@@ -23,7 +24,10 @@ export function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
         setIsDropdownOpen(false);
       }
     };
@@ -38,7 +42,7 @@ export function Header() {
     navigate("/");
   };
 
-  const firstName = profile?.full_name?.split(' ')[0] || "User";
+  const firstName = profile?.full_name?.split(" ")[0] || "User";
 
   return (
     <header className="border-b border-gray-100 bg-white">
@@ -47,22 +51,25 @@ export function Header() {
           <FileText className="h-6 w-6" />
           <span className="font-bold text-lg">BarangayConnect</span>
         </Link>
-        
+
         <div className="flex items-center gap-6">
           <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
             <Globe className="h-4 w-4" />
             <span>Tagalog</span>
           </button>
-          
-          <Link to="/track" className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors">
+
+          <Link
+            to="/track"
+            className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
+          >
             I-track ang Request
           </Link>
-          
+
           {token ? (
             <div className="relative" ref={dropdownRef}>
-              <Button 
-                variant="outline" 
-                size="sm" 
+              <Button
+                variant="outline"
+                size="sm"
                 className="hidden sm:inline-flex rounded-full gap-2"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
@@ -70,18 +77,10 @@ export function Header() {
                 <span className="text-gray-700">Kumusta, {firstName}</span>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </Button>
-              
+
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50">
-                  <Link 
-                    to="/dashboard" 
-                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                    onClick={() => setIsDropdownOpen(false)}
-                  >
-                    <User className="w-4 h-4" />
-                    Dashboard
-                  </Link>
-                  <button 
+                  <button
                     onClick={handleLogout}
                     className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left transition-colors"
                   >
@@ -92,8 +91,13 @@ export function Header() {
               )}
             </div>
           ) : (
-            <Button variant="outline" size="sm" className="hidden sm:inline-flex rounded-full" asChild>
-              <Link to="/verify" state={{ next: '/dashboard' }}>
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden sm:inline-flex rounded-full"
+              asChild
+            >
+              <Link to="/verify" state={{ next: "/dashboard" }}>
                 Login
               </Link>
             </Button>
