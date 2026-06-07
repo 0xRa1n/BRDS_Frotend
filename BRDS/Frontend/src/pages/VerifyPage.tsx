@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 const COUNTRY_CODES = [
   { code: "+93", country: "Afghanistan" },
@@ -33,6 +34,7 @@ export function VerifyPage() {
   const [phone, setPhone] = useState("");
   const [selectedCountry, setSelectedCountry] = useState("Philippines");
   const [isLoading, setIsLoading] = useState(false);
+  const { t } = useLanguage();
 
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -63,10 +65,10 @@ export function VerifyPage() {
     <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[calc(100vh-250px)]">
       <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-md border border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          I-verify ang iyong numero
+          {t('verifyNumberTitle')}
         </h2>
         <p className="text-gray-600 text-sm mb-8 leading-relaxed">
-          Ilagay ang iyong cellphone number para makatanggap ng verification code.
+          {t('verifyNumberDesc')}
         </p>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -105,11 +107,11 @@ export function VerifyPage() {
           </div>
 
           <Button type="submit" className="w-full h-11 text-base" disabled={isLoading}>
-            {isLoading ? "Nagpapadala..." : "Magpadala ng code"}
+            {isLoading ? t('sendingCodeBtn') : t('sendCodeBtn')}
           </Button>
 
           <p className="text-center text-xs text-gray-500 pt-2">
-            Ang iyong numero ay gagamitin lamang para sa verification.
+            {t('numberUsedForVerifOnly')}
           </p>
         </form>
       </div>

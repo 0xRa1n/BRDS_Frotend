@@ -1,7 +1,9 @@
 import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HeroSection() {
+  const { t } = useLanguage();
   return (
     <section className="pt-8 pb-16 md:pt-12 md:pb-24 max-w-4xl">
       <div className="space-y-6">
@@ -14,15 +16,15 @@ export function HeroSection() {
         </h1>
 
         <p className="text-lg text-gray-600 max-w-2xl">
-          Hindi na kailangan pang pumila.
+          {t('noMoreLines')}
         </p>
 
         <div className="flex flex-wrap items-center gap-4 pt-4">
           <Button size="lg" className="rounded-md" asChild>
-            <Link to="/verify" state={{ next: '/request' }}>Mag-request ng dokumento</Link>
+            <Link to="/verify" state={{ next: '/request' }}>{t('requestDocBtn')}</Link>
           </Button>
           <Button variant="outline" size="lg" className="rounded-md" asChild>
-            <Link to="/track">I-track ang aking request</Link>
+            <Link to="/track">{t('trackMyRequestBtn')}</Link>
           </Button>
         </div>
       </div>

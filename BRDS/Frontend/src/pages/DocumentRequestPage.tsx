@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { useNavigate } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { Step1DocumentType } from "@/components/request/Step1DocumentType";
 import { Step2PersonalInfo } from "@/components/request/Step2PersonalInfo";
@@ -6,18 +7,21 @@ import { Step3Review } from "@/components/request/Step3Review";
 import { Step4Success } from "@/components/request/Step4Success";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
-
-const steps = [
-  { id: 1, title: "Uri ng Dokumento" },
-  { id: 2, title: "Personal na Impormasyon" },
-  { id: 3, title: "Review at Submit" },
-];
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function DocumentRequestPage() {
+  const navigate = useNavigate();
+  const { t } = useLanguage();
   const [currentStep, setCurrentStep] = useState(1);
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
+  
+  const steps = [
+    { id: 1, title: t('docTypeStep') },
+    { id: 2, title: t('personalInfoStep') },
+    { id: 3, title: t('reviewSubmitStep') },
+  ];
   
   // Idempotency key generated once per mount of this component
   const idempotencyKey = useRef(crypto.randomUUID());
@@ -146,6 +150,7 @@ export function DocumentRequestPage() {
                     setFormData(prev => ({ ...prev, documentType: type }));
                     handleNext();
                   }} 
+                  onBack={() => navigate('/dashboard')}
                 />
               )}
               {currentStep === 2 && (

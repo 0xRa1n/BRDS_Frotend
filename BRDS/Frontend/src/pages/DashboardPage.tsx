@@ -16,9 +16,11 @@ import { Button } from "@/components/ui/button";
 import { api } from "@/lib/api";
 import { ProfileEditModal } from "@/components/dashboard/ProfileEditModal";
 import { toast } from "sonner";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function DashboardPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const [profile, setProfile] = useState<any>(null);
   const [requests, setRequests] = useState<any[]>([]);
@@ -145,7 +147,7 @@ export function DashboardPage() {
             <div>
               <div className="flex items-center gap-2">
                 <h1 className="text-2xl font-bold text-white">
-                  Kumusta, {firstName}!
+                  {t('kumusta')}, {firstName}!
                 </h1>
                 <button 
                   onClick={() => setIsEditModalOpen(true)}
@@ -165,7 +167,7 @@ export function DashboardPage() {
             onClick={() => navigate("/request")}
           >
             <Plus className="w-4 h-4" />
-            Bagong Request
+            {t('newRequest')}
           </Button>
         </div>
 
@@ -176,7 +178,7 @@ export function DashboardPage() {
               <Clock className="w-6 h-6 text-amber-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-0.5">Active Requests</p>
+              <p className="text-sm text-gray-500 mb-0.5">{t('activeRequests')}</p>
               <p className="text-2xl font-bold text-gray-900">{stats.active}</p>
             </div>
           </div>
@@ -186,7 +188,7 @@ export function DashboardPage() {
               <CheckCircle2 className="w-6 h-6 text-emerald-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-0.5">Ready for Pickup</p>
+              <p className="text-sm text-gray-500 mb-0.5">{t('readyForPickup')}</p>
               <p className="text-2xl font-bold text-gray-900">{stats.ready}</p>
             </div>
           </div>
@@ -196,7 +198,7 @@ export function DashboardPage() {
               <FileText className="w-6 h-6 text-blue-500" />
             </div>
             <div>
-              <p className="text-sm text-gray-500 mb-0.5">Total Completed</p>
+              <p className="text-sm text-gray-500 mb-0.5">{t('totalCompleted')}</p>
               <p className="text-2xl font-bold text-gray-900">
                 {stats.completed}
               </p>
@@ -208,21 +210,20 @@ export function DashboardPage() {
         <div className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-100 flex items-center justify-between">
             <h2 className="text-lg font-bold text-gray-900">
-              Mga Nakaraang Request
+              {t('pastRequests')}
             </h2>
             <Link 
               to="/dashboard/requests" 
               className="text-sm font-medium text-emerald-600 hover:text-emerald-700 flex items-center gap-1 transition-colors"
             >
-              Tingnan Lahat <ArrowRight className="w-4 h-4" />
+              {t('viewAll')} <ArrowRight className="w-4 h-4" />
             </Link>
           </div>
 
           <div className="divide-y divide-gray-50">
             {requests.length === 0 ? (
               <div className="p-8 text-center text-gray-500">
-                Wala ka pang request. Mag-click ng "Bagong Request" para
-                magsimula.
+                {t('noRequestYet')}
               </div>
             ) : (
               requests.map((req) => {

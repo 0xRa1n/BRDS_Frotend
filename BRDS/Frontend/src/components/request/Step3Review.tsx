@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Step3Props {
   formData: {
@@ -15,6 +16,7 @@ interface Step3Props {
 }
 
 export function Step3Review({ formData, onNext, onBack, isSubmitting }: Step3Props) {
+  const { t } = useLanguage();
   const [agreed, setAgreed] = useState(false);
 
   return (
@@ -27,12 +29,12 @@ export function Step3Review({ formData, onNext, onBack, isSubmitting }: Step3Pro
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h2 className="text-xl font-bold text-gray-900">Review at Submit</h2>
+        <h2 className="text-xl font-bold text-gray-900">{t('reviewSubmitStep')}</h2>
       </div>
 
       <div className="bg-white border border-gray-200 rounded-xl p-6 space-y-5 mb-6">
         <div>
-          <p className="text-xs text-gray-500 mb-1">Uri ng Dokumento</p>
+          <p className="text-xs text-gray-500 mb-1">{t('docTypeStep')}</p>
           <p className="font-medium text-gray-900 capitalize">{formData.documentType.replace(/-/g, " ")}</p>
         </div>
         
@@ -69,7 +71,7 @@ export function Step3Review({ formData, onNext, onBack, isSubmitting }: Step3Pro
           />
         </div>
         <label htmlFor="agree" className="text-sm text-gray-600 cursor-pointer leading-tight">
-          Pinatutunayan ko na tama ang lahat ng impormasyon na aking inilagay.
+          {t('confirmInfoCorrect')}
         </label>
       </div>
 

@@ -2,9 +2,11 @@ import { useState, useEffect } from "react";
 import { ArrowLeft, CheckCircle2, Clock, Calendar, AlertCircle, Loader2 } from "lucide-react";
 import { useNavigate } from "react-router";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function AllRequestsPage() {
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const [requests, setRequests] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState(1);
@@ -35,26 +37,26 @@ export function AllRequestsPage() {
     if (s === "ready for pickup") {
       return (
         <div className="px-3 py-1.5 rounded-full border border-emerald-200 bg-emerald-50 text-emerald-700 text-xs font-semibold flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5" /> Ready for Pickup
+          <CheckCircle2 className="w-3.5 h-3.5" /> {t('readyForPickup')}
         </div>
       );
     } else if (s === "released") {
       return (
         <div className="px-3 py-1.5 rounded-full border border-gray-200 bg-gray-50 text-gray-700 text-xs font-semibold flex items-center gap-1.5">
-          <CheckCircle2 className="w-3.5 h-3.5 text-gray-500" /> Released
+          <CheckCircle2 className="w-3.5 h-3.5 text-gray-500" /> {t('releasedTitle')}
         </div>
       );
     } else if (s === "needs update" || s === "review") {
       return (
         <div className="flex flex-col items-end gap-1">
           <div className="px-3 py-1.5 rounded-full border border-orange-200 bg-orange-50 text-orange-700 text-xs font-semibold flex items-center gap-1.5">
-            <AlertCircle className="w-3.5 h-3.5" /> Needs Update
+            <AlertCircle className="w-3.5 h-3.5" /> {t('needsInfoTitle')}
           </div>
           <span className="text-[10px] text-red-500 font-medium flex items-center gap-1">
             <span className="w-2 h-2 border border-red-500 rounded-sm inline-block flex items-center justify-center">
               <span className="w-1 h-1 bg-red-500 rounded-full"></span>
             </span>
-            I-cancel ang Request
+            {t('cancelRequest')}
           </span>
         </div>
       );
@@ -84,8 +86,8 @@ export function AllRequestsPage() {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Lahat ng Nakaraang Request</h1>
-            <p className="text-gray-500 text-sm">Kasaysayan ng iyong mga transaksyon sa barangay</p>
+            <h1 className="text-2xl font-bold text-gray-900">{t('allPastRequests')}</h1>
+            <p className="text-gray-500 text-sm">{t('allRequestsSubtitle')}</p>
           </div>
         </div>
 
@@ -100,7 +102,7 @@ export function AllRequestsPage() {
           <div className="divide-y divide-gray-50">
             {requests.length === 0 && !isLoading ? (
               <div className="p-12 text-center text-gray-500">
-                Wala pang nakaraang request.
+                {t('noPastRequests')}
               </div>
             ) : (
               requests.map((req) => {
@@ -160,9 +162,12 @@ export function AllRequestsPage() {
 
           {!isLoading && total > 0 && (
             <div className="p-6 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="text-sm text-gray-500">
-                Pinapakita ang <span className="font-semibold text-gray-900">{startEntry}</span> hanggang <span className="font-semibold text-gray-900">{endEntry}</span> ng <span className="font-semibold text-gray-900">{total}</span> entries
-              </div>
+              <div className="text-sm text-gray-500" dangerouslySetInnerHTML={{
+                __html: t('showingEntries')
+                  .replace('{start}', `<span class="font-semibold text-gray-900">${startEntry}</span>`)
+                  .replace('{end}', `<span class="font-semibold text-gray-900">${endEntry}</span>`)
+                  .replace('{total}', `<span class="font-semibold text-gray-900">${total}</span>`)
+              }} />
               
               <div className="flex items-center gap-2">
                 <button

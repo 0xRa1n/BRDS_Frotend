@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Step2Props {
   onNext: (data: any) => void;
@@ -10,6 +11,7 @@ interface Step2Props {
 }
 
 export function Step2PersonalInfo({ onNext, onBack }: Step2Props) {
+  const { t } = useLanguage();
   const [formData, setFormData] = useState({
     fullName: "",
     address: "",
@@ -69,7 +71,7 @@ export function Step2PersonalInfo({ onNext, onBack }: Step2Props) {
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
-        <h2 className="text-xl font-bold text-gray-900">Personal na Impormasyon</h2>
+        <h2 className="text-xl font-bold text-gray-900">{t('personalInfoStep')}</h2>
       </div>
 
       <div className="space-y-4 mb-8">
@@ -117,7 +119,7 @@ export function Step2PersonalInfo({ onNext, onBack }: Step2Props) {
             className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary text-gray-600 bg-white"
           >
             <option value="" disabled>
-              Pumili ng dahilan...
+              {t('selectReason')}
             </option>
             <option value="employment">Employment / Trabaho</option>
             <option value="financial">Financial Assistance</option>
@@ -130,7 +132,7 @@ export function Step2PersonalInfo({ onNext, onBack }: Step2Props) {
         <div className="space-y-1.5 pt-2">
           <label className="text-sm font-medium text-gray-700">Upload Valid ID</label>
           <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 flex flex-col items-center justify-center text-center bg-gray-50/50">
-            <p className="text-sm text-gray-500 mb-3">Mag-upload o kumuha ng litrato ng iyong ID</p>
+            <p className="text-sm text-gray-500 mb-3">{t('uploadIdDesc')}</p>
             <label className="bg-gray-100 hover:bg-gray-200 text-gray-700 px-4 py-2 rounded-md text-sm font-medium cursor-pointer transition-colors">
               Choose File / Camera
               <input type="file" className="hidden" accept="image/*" capture="environment" />

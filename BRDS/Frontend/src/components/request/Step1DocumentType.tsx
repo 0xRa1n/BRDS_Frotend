@@ -1,46 +1,49 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileText, MapPin, Briefcase, Building2 } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Step1Props {
   onNext: (documentType: string) => void;
+  onBack?: () => void;
 }
 
-const documentTypes = [
-  {
-    id: "clearance",
-    title: "Barangay Clearance",
-    description: "Para sa trabaho, bangko, o ID",
-    icon: FileText,
-  },
-  {
-    id: "indigency",
-    title: "Certificate of Indigency",
-    description: "Para sa financial o medical assistance",
-    icon: MapPin,
-  },
-  {
-    id: "business",
-    title: "Business Permit Endorsement",
-    description: "Para sa pagbukas ng negosyo",
-    icon: Briefcase,
-  },
-  {
-    id: "residency",
-    title: "Certificate of Residency",
-    description: "Patunay ng tirahan sa barangay",
-    icon: Building2,
-  },
-];
-
-export function Step1DocumentType({ onNext }: Step1Props) {
+export function Step1DocumentType({ onNext, onBack }: Step1Props) {
   const [selected, setSelected] = useState<string | null>(null);
+  const { t } = useLanguage();
+
+  const documentTypes = [
+    {
+      id: "clearance",
+      title: "Barangay Clearance",
+      description: t('clearanceDesc'),
+      icon: FileText,
+    },
+    {
+      id: "indigency",
+      title: "Certificate of Indigency",
+      description: t('indigencyDesc'),
+      icon: MapPin,
+    },
+    {
+      id: "business",
+      title: "Business Permit Endorsement",
+      description: t('businessDesc'),
+      icon: Briefcase,
+    },
+    {
+      id: "residency",
+      title: "Certificate of Residency",
+      description: t('residencyDesc'),
+      icon: Building2,
+    },
+  ];
 
   return (
     <div className="flex flex-col h-full animate-in fade-in duration-500">
       <div className="mb-8">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Uri ng Dokumento</h2>
-        <p className="text-gray-600 text-sm">Anong dokumento ang kailangan mo?</p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t('docTypeStep')}</h2>
+        <p className="text-gray-600 text-sm">{t('whatDocNeeded')}</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
@@ -73,13 +76,22 @@ export function Step1DocumentType({ onNext }: Step1Props) {
         })}
       </div>
 
-      <div className="mt-auto pt-4">
+      <div className="mt-auto pt-4 flex gap-3">
+        {onBack && (
+          <Button
+            onClick={onBack}
+            variant="outline"
+            className="w-full md:w-auto md:flex-1 h-12 text-base rounded-md border-gray-200 text-gray-600 hover:bg-gray-50"
+          >
+            {t('goBack')}
+          </Button>
+        )}
         <Button
           onClick={() => onNext(selected!)}
           disabled={!selected}
-          className="w-full h-12 text-base rounded-md"
+          className={`h-12 text-base rounded-md ${onBack ? "w-full md:flex-1" : "w-full"}`}
         >
-          Next
+          {t('next')}
         </Button>
       </div>
     </div>

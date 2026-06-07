@@ -2,10 +2,12 @@ import { useState } from 'react';
 import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useNavigate } from 'react-router';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 export function TrackSearchPage() {
   const [referenceNumber, setReferenceNumber] = useState('');
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -25,11 +27,11 @@ export function TrackSearchPage() {
         </div>
 
         <h1 className="text-2xl font-bold text-gray-900 mb-4">
-          I-track ang iyong Request
+          {t('trackYourRequest')}
         </h1>
         
         <p className="text-sm text-gray-600 mb-8 leading-relaxed px-2">
-          I-type ang Reference Number na natanggap mo matapos mag-submit ng request.
+          {t('trackSearchDesc')}
         </p>
 
         <form onSubmit={handleSearch} className="space-y-4">
@@ -45,7 +47,7 @@ export function TrackSearchPage() {
             type="submit" 
             className="w-full h-12 bg-emerald-500 hover:bg-emerald-600 text-white rounded-lg text-base font-medium"
           >
-            Hanapin
+            {t('searchBtn')}
           </Button>
         </form>
 

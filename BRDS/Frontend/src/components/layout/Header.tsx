@@ -3,13 +3,17 @@ import { Globe, FileText, User, LogOut, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function Header() {
   const navigate = useNavigate();
+  const { language, setLanguage, t } = useLanguage();
   const token = localStorage.getItem("jwt_token");
   const [profile, setProfile] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const langDropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (token) {
@@ -24,11 +28,11 @@ export function Header() {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
+      }
+      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target as Node)) {
+        setIsLangDropdownOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -53,16 +57,38 @@ export function Header() {
         </Link>
 
         <div className="flex items-center gap-6">
-          <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors">
-            <Globe className="h-4 w-4" />
-            <span>Tagalog</span>
-          </button>
+          <div className="relative" ref={langDropdownRef}>
+            <button 
+              onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
+              className="flex items-center gap-2 text-sm text-gray-600 hover:text-gray-900 transition-colors"
+            >
+              <Globe className="h-4 w-4" />
+              <span>{t('languageName')}</span>
+              <ChevronDown className="w-3 h-3" />
+            </button>
+            {isLangDropdownOpen && (
+              <div className="absolute right-0 mt-2 w-32 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50">
+                <button
+                  onClick={() => { setLanguage('en'); setIsLangDropdownOpen(false); }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                >
+                  English
+                </button>
+                <button
+                  onClick={() => { setLanguage('fil'); setIsLangDropdownOpen(false); }}
+                  className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 w-full text-left"
+                >
+                  Filipino
+                </button>
+              </div>
+            )}
+          </div>
 
           <Link
             to="/track"
             className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors"
           >
-            I-track ang Request
+            {t('trackRequest')}
           </Link>
 
           {token ? (
@@ -74,7 +100,7 @@ export function Header() {
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
                 <User className="w-4 h-4 text-emerald-600" />
-                <span className="text-gray-700">Kumusta, {firstName}</span>
+                <span className="text-gray-700">{t('kumusta')}, {firstName}</span>
                 <ChevronDown className="w-4 h-4 text-gray-400" />
               </Button>
 
@@ -85,7 +111,7 @@ export function Header() {
                     className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
-                    Log out
+                    {t('logout')}
                   </button>
                 </div>
               )}
@@ -98,7 +124,7 @@ export function Header() {
               asChild
             >
               <Link to="/verify" state={{ next: "/dashboard" }}>
-                Login
+                {t('login')}
               </Link>
             </Button>
           )}

@@ -2,12 +2,14 @@ import { useState } from 'react';
 import { Check, Clock, AlertCircle, Calendar, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useParams, useNavigate } from 'react-router';
+import { useLanguage } from '@/contexts/LanguageContext';
 
 type RequestStatus = 'submitted' | 'review' | 'approved' | 'released';
 
 export function TrackRequestPage() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   
   // Using a state variable to hold the document status for display purposes.
   // This would eventually be populated by an API call using the tracking ID.
@@ -20,10 +22,10 @@ export function TrackRequestPage() {
   };
 
   const steps = [
-    { id: 'submitted', title: 'Natanggap', subtitle: 'Submitted', side: 'right' as const },
-    { id: 'review', title: 'Sinusuri', subtitle: 'Under Review', side: 'left' as const },
-    { id: 'approved', title: 'Naaprubahan', subtitle: 'Approved', side: 'right' as const },
-    { id: 'released', title: 'Pwede na i-pick up', subtitle: 'Ready for Pickup', side: 'left' as const },
+    { id: 'submitted', title: t('statusReceived'), subtitle: 'Submitted', side: 'right' as const },
+    { id: 'review', title: t('statusUnderReview'), subtitle: 'Under Review', side: 'left' as const },
+    { id: 'approved', title: t('statusApproved'), subtitle: 'Approved', side: 'right' as const },
+    { id: 'released', title: t('statusReadyForPickup'), subtitle: 'Ready for Pickup', side: 'left' as const },
   ];
 
   // Determine which steps are active based on the current status
@@ -47,12 +49,12 @@ export function TrackRequestPage() {
               className="flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-gray-900 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
-              Bumalik
+              {t('goBack')}
             </button>
           </div>
 
           <div className="text-center mb-8 relative z-10 mt-4 sm:mt-0">
-            <h1 className="text-2xl font-bold text-gray-900 mb-6">Status ng iyong Request</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-6">{t('requestStatusTitle')}</h1>
             
             <div className="inline-block border border-emerald-500 text-emerald-600 rounded-full px-4 py-1 font-semibold mb-6 bg-white">
               {request.id}
@@ -69,10 +71,10 @@ export function TrackRequestPage() {
                 <div className="flex justify-center mb-3">
                   <AlertCircle className="w-8 h-8 text-orange-500" />
                 </div>
-                <h3 className="text-lg font-bold text-orange-700 mb-2">Needs Information</h3>
-                <p className="text-orange-600 mb-6">Malabo ang na-upload na ID. Paki-upload muli.</p>
+                <h3 className="text-lg font-bold text-orange-700 mb-2">{t('needsInfoTitle')}</h3>
+                <p className="text-orange-600 mb-6">{t('needsInfoDesc')}</p>
                 <Button className="bg-orange-500 hover:bg-orange-600 text-white rounded-full px-8">
-                  Mag-update ng impormasyon
+                  {t('updateInfoBtn')}
                 </Button>
               </div>
             )}
@@ -82,11 +84,11 @@ export function TrackRequestPage() {
                 <div className="flex justify-center mb-3">
                   <Check className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-lg font-bold text-emerald-700 mb-2">Approved!</h3>
-                <p className="text-emerald-600 mb-6">Pumunta sa Barangay Hall, Lunes–Biyernes, 8am–5pm.</p>
+                <h3 className="text-lg font-bold text-emerald-700 mb-2">{t('approvedTitle')}</h3>
+                <p className="text-emerald-600 mb-6">{t('approvedDesc')}</p>
                 <Button className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-full px-8 flex items-center gap-2 mx-auto">
                   <Calendar className="w-4 h-4" />
-                  I-schedule ang Pickup
+                  {t('schedulePickupBtn')}
                 </Button>
               </div>
             )}
@@ -96,8 +98,8 @@ export function TrackRequestPage() {
                 <div className="flex justify-center mb-3">
                   <Check className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-lg font-bold text-emerald-700 mb-2">Released</h3>
-                <p className="text-emerald-600">Nakuha na ang inyong dokumento.</p>
+                <h3 className="text-lg font-bold text-emerald-700 mb-2">{t('releasedTitle')}</h3>
+                <p className="text-emerald-600">{t('releasedDesc')}</p>
               </div>
             )}
           </div>

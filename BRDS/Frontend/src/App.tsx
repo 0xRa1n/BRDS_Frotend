@@ -11,11 +11,13 @@ import { TrackRequestPage } from "@/pages/TrackRequestPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AllRequestsPage } from "@/pages/AllRequestsPage";
 import { AuthGuard } from "@/components/layout/AuthGuard";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 
 function App() {
   return (
-    <BrowserRouter>
-      <div className="min-h-screen flex flex-col font-sans">
+    <LanguageProvider>
+      <BrowserRouter>
+        <div className="min-h-screen flex flex-col font-sans">
         <Header />
         
         <main className="flex-1 flex flex-col">
@@ -47,8 +49,9 @@ function App() {
         
         <Footer />
       </div>
-      <Toaster position="top-center" richColors />
-    </BrowserRouter>
+        <Toaster position="top-center" richColors />
+      </BrowserRouter>
+    </LanguageProvider>
   );
 }
 

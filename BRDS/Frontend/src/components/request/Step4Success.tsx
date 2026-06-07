@@ -1,6 +1,7 @@
 import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Step4Props {
   referenceNumber: string;
@@ -13,6 +14,7 @@ interface Step4Props {
 
 export function Step4Success({ referenceNumber, formData }: Step4Props) {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   return (
     <div className="flex flex-col items-center justify-start text-center animate-in zoom-in-95 duration-500 py-8">
@@ -23,7 +25,7 @@ export function Step4Success({ referenceNumber, formData }: Step4Props) {
       <h2 className="text-2xl font-bold text-gray-900 mb-4">Request Submitted!</h2>
       
       <p className="text-gray-600 text-sm mb-8 max-w-[320px] mx-auto leading-relaxed">
-        Natanggap na namin ang iyong request. Paki-save ang iyong Reference Number para ma-track ang status nito.
+        {t('requestReceived')}
       </p>
 
       <div className="border-2 border-dashed border-primary rounded-xl p-6 mb-8 w-full">
@@ -36,7 +38,7 @@ export function Step4Success({ referenceNumber, formData }: Step4Props) {
         
         <div className="space-y-4">
           <div>
-            <p className="text-xs text-gray-500 mb-1">Uri ng Dokumento</p>
+            <p className="text-xs text-gray-500 mb-1">{t('docTypeStep')}</p>
             <p className="font-medium text-gray-900 capitalize">{formData.documentType.replace(/-/g, " ")}</p>
           </div>
           
@@ -58,13 +60,13 @@ export function Step4Success({ referenceNumber, formData }: Step4Props) {
           onClick={() => navigate('/dashboard')}
           className="flex-1 h-12 text-base rounded-md border-gray-200 text-gray-700"
         >
-          Bumalik sa Dashboard
+          {t('backToDashboard')}
         </Button>
         <Button
           onClick={() => navigate(`/track/${referenceNumber}`)}
           className="flex-1 h-12 text-base rounded-md"
         >
-          I-track ang Request
+          {t('trackRequest')}
         </Button>
       </div>
     </div>

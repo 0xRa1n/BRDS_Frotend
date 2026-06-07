@@ -4,9 +4,11 @@ import { Laptop, MessageSquare, Clock } from "lucide-react";
 import placeholderImg from "@/assets/img/placeholder.jpeg";
 
 import { Navigate } from "react-router";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function HomePage() {
   const token = localStorage.getItem("jwt_token");
+  const { t } = useLanguage();
 
   if (token) {
     return <Navigate to="/dashboard" replace />;
@@ -20,7 +22,7 @@ export function HomePage() {
         <FeatureCard
           icon={<Laptop className="w-6 h-6" />}
           title="Online submission"
-          description="Mag-submit ng request kahit nasa bahay. Hindi mo na kailangang pumunta sa barangay hall para lang mag-fill up ng form. Ginawa naming madali at accessible ito para sa lahat."
+          description={t('homeFeature1Desc')}
           imageSrc={placeholderImg}
           imagePosition="left"
         />
@@ -28,7 +30,7 @@ export function HomePage() {
         <FeatureCard
           icon={<MessageSquare className="w-6 h-6" />}
           title="SMS updates"
-          description="Makatanggap ng status updates sa text. I-track ang iyong request sa bawat hakbang at malaman agad kung kailangan mo nang pumunta sa hall."
+          description={t('homeFeature2Desc')}
           imageSrc={placeholderImg}
           imagePosition="right"
         />
@@ -36,7 +38,7 @@ export function HomePage() {
         <FeatureCard
           icon={<Clock className="w-6 h-6" />}
           title="No more long queues"
-          description="Pumunta lang sa barangay hall pag ready na ang dokumento. I-schedule ang oras na gusto mo para mas mabilis at walang abala sa iyong araw."
+          description={t('homeFeature3Desc')}
           imageSrc={placeholderImg}
           imagePosition="left"
         />

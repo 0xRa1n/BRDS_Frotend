@@ -3,10 +3,12 @@ import { useLocation, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { api } from "@/lib/api";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export function VerifyOtpPage() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { t } = useLanguage();
   const phoneNumber = location.state?.phone || "";
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
@@ -101,10 +103,10 @@ export function VerifyOtpPage() {
     <div className="flex-1 flex flex-col items-center justify-center p-4 min-h-[calc(100vh-250px)]">
       <div className="bg-[#f9fafb] p-8 md:p-10 rounded-2xl w-full max-w-md border border-gray-100">
         <h2 className="text-2xl font-bold text-gray-900 mb-2">
-          Ilagay ang Verification Code
+          {t('enterVerifCodeTitle')}
         </h2>
         <p className="text-gray-600 text-sm mb-8 leading-relaxed">
-          I-type ang 6-digit code na ipinadala sa iyong numero.
+          {t('enterVerifCodeDesc')}
         </p>
 
         <form className="space-y-6" onSubmit={handleSubmit}>
@@ -140,12 +142,12 @@ export function VerifyOtpPage() {
                   : "text-primary font-medium hover:underline"
               }`}
             >
-              Hindi natanggap? I-resend {isResendDisabled && `(${formatTime(countdown)})`}
+              {t('notReceivedResend')} {isResendDisabled && `(${formatTime(countdown)})`}
             </button>
           </div>
 
           <p className="text-center text-xs text-gray-500 mt-6">
-            Ang iyong numero ay gagamitin lamang para sa verification.
+            {t('numberUsedForVerifOnly')}
           </p>
         </form>
       </div>
