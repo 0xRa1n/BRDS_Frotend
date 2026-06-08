@@ -11,45 +11,67 @@ import { TrackRequestPage } from "@/pages/TrackRequestPage";
 import { DashboardPage } from "@/pages/DashboardPage";
 import { AllRequestsPage } from "@/pages/AllRequestsPage";
 import { AuthGuard } from "@/components/layout/AuthGuard";
+import { AdminGuard } from "@/components/layout/AdminGuard";
+import { AdminLoginPage } from "@/pages/admin/AdminLoginPage";
+import { AdminDashboardPage } from "@/pages/admin/AdminDashboardPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+
+function PublicLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="min-h-screen flex flex-col font-sans">
+      <Header />
+      <main className="flex-1 flex flex-col">
+        {children}
+      </main>
+      <Footer />
+    </div>
+  );
+}
 
 function App() {
   return (
     <LanguageProvider>
       <BrowserRouter>
-        <div className="min-h-screen flex flex-col font-sans">
-        <Header />
-        
-        <main className="flex-1 flex flex-col">
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/verify" element={<VerifyPage />} />
-            <Route path="/verify-otp" element={<VerifyOtpPage />} />
-            <Route path="/track" element={<TrackSearchPage />} />
-            <Route path="/track/:id" element={<TrackRequestPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
-            <Route 
-              path="/dashboard/requests" 
-              element={
-                <AuthGuard>
-                  <AllRequestsPage />
-                </AuthGuard>
-              } 
-            />
-            <Route 
-              path="/request" 
-              element={
-                <AuthGuard>
-                  <DocumentRequestPage />
-                </AuthGuard>
-              } 
-            />
-          </Routes>
-        </main>
-        
-        <Footer />
-      </div>
-        <Toaster position="top-center" richColors />
+        <Routes>
+          <Route path="/admin/login" element={<AdminLoginPage />} />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <AdminGuard>
+                <AdminDashboardPage />
+              </AdminGuard>
+            } 
+          />
+          <Route path="/*" element={
+            <PublicLayout>
+              <Routes>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/verify" element={<VerifyPage />} />
+                <Route path="/verify-otp" element={<VerifyOtpPage />} />
+                <Route path="/track" element={<TrackSearchPage />} />
+                <Route path="/track/:id" element={<TrackRequestPage />} />
+                <Route path="/dashboard" element={<DashboardPage />} />
+                <Route 
+                  path="/dashboard/requests" 
+                  element={
+                    <AuthGuard>
+                      <AllRequestsPage />
+                    </AuthGuard>
+                  } 
+                />
+                <Route 
+                  path="/request" 
+                  element={
+                    <AuthGuard>
+                      <DocumentRequestPage />
+                    </AuthGuard>
+                  } 
+                />
+              </Routes>
+            </PublicLayout>
+          } />
+        </Routes>
+        <Toaster position="top-center" richColors closeButton />
       </BrowserRouter>
     </LanguageProvider>
   );

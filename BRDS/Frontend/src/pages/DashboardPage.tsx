@@ -48,7 +48,7 @@ export function DashboardPage() {
         setProfile(profileRes);
       } else {
         // Handle unauthenticated case by redirecting to login
-        toast.error("Please login to view your dashboard");
+        toast.error("Please login to view your dashboard", { id: "auth-error" });
         navigate("/verify", { state: { next: "/dashboard" } });
         return;
       }

@@ -21,6 +21,14 @@ const getAuthHeaders = () => {
   };
 };
 
+const getAdminAuthHeaders = () => {
+  const token = localStorage.getItem("admin_token");
+  return {
+    "Content-Type": "application/json",
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
+
 export const api = {
   auth: {
     sendOtp: async (data: SendOtpRequest) => {
@@ -58,7 +66,50 @@ export const api = {
         );
       }
       return response.json();
+      return response.json();
     },
+  },
+  admin: {
+    login: async (data: any) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || "Login failed");
+      }
+      return response.json();
+    },
+    getRequests: async (status?: string) => {
+      const url = new URL(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests`);
+      if (status && status !== "All") url.searchParams.append("status", status);
+      
+      const response = await fetch(url.toString(), {
+        headers: getAdminAuthHeaders(),
+      });
+      if (!response.ok) throw new Error("Failed to fetch requests");
+      return response.json();
+    },
+    createRequest: async (data: any) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests`,
+        {
+          method: "POST",
+          headers: getAdminAuthHeaders(),
+          body: JSON.stringify(data),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to create request");
+      }
+      return response.json();
+    }
   },
   user: {
     getProfile: async () => {

@@ -68,6 +68,26 @@ export function VerifyOtpPage() {
     }
   };
 
+  const handlePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    const pastedData = e.clipboardData.getData("text").replace(/\D/g, "").slice(0, 6);
+    if (!pastedData) return;
+
+    const newOtp = [...otp];
+    for (let i = 0; i < pastedData.length; i++) {
+      newOtp[i] = pastedData[i];
+    }
+    setOtp(newOtp);
+
+    // Focus the next empty input or the last one
+    const focusIndex = Math.min(pastedData.length, 5);
+    if (focusIndex < 6 && pastedData.length < 6) {
+      inputRefs.current[focusIndex]?.focus();
+    } else {
+      inputRefs.current[5]?.focus();
+    }
+  };
+
   const handleSubmit = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     const code = otp.join("");
@@ -122,6 +142,7 @@ export function VerifyOtpPage() {
                 value={digit}
                 onChange={(e) => handleChange(index, e.target.value)}
                 onKeyDown={(e) => handleKeyDown(index, e)}
+                onPaste={handlePaste}
                 className="w-12 h-14 md:w-14 md:h-16 text-center text-2xl font-semibold rounded-md border border-gray-300 focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all"
               />
             ))}

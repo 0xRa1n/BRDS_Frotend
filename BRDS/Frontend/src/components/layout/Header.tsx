@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
 import { api } from "@/lib/api";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { toast } from "sonner";
 
 export function Header() {
   const navigate = useNavigate();
@@ -12,6 +13,7 @@ export function Header() {
   const [profile, setProfile] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
+  const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const langDropdownRef = useRef<HTMLDivElement>(null);
 
@@ -39,11 +41,20 @@ export function Header() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleLogout = () => {
+  const handleLogoutClick = () => {
+    setIsDropdownOpen(false);
+    setIsLogoutModalOpen(true);
+  };
+
+  const confirmLogout = () => {
     localStorage.removeItem("jwt_token");
     setProfile(null);
-    setIsDropdownOpen(false);
+    setIsLogoutModalOpen(false);
     navigate("/");
+    toast.success("Logged out", { 
+      id: "logout-success",
+      style: { backgroundColor: "#ecfdf5", color: "#059669", border: "1px solid #10b981" }
+    });
   };
 
   const firstName = profile?.full_name?.split(" ")[0] || "User";
@@ -107,7 +118,7 @@ export function Header() {
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-100 rounded-xl shadow-lg py-2 z-50">
                   <button
-                    onClick={handleLogout}
+                    onClick={handleLogoutClick}
                     className="flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 w-full text-left transition-colors"
                   >
                     <LogOut className="w-4 h-4" />
@@ -130,6 +141,30 @@ export function Header() {
           )}
         </div>
       </div>
+
+      {isLogoutModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full mx-4 shadow-xl">
+            <h3 className="text-lg font-bold text-gray-900 mb-2">Confirm Logout</h3>
+            <p className="text-gray-600 text-sm mb-6">Are you sure you want to log out?</p>
+            <div className="flex items-center justify-end gap-3">
+              <Button
+                variant="outline"
+                onClick={() => setIsLogoutModalOpen(false)}
+                className="text-gray-600"
+              >
+                Cancel
+              </Button>
+              <Button
+                onClick={confirmLogout}
+                className="bg-red-600 hover:bg-red-700 text-white"
+              >
+                Log Out
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
