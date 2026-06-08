@@ -69,6 +69,17 @@ export const api = {
       return response.json();
     },
   },
+  public: {
+    trackRequest: async (referenceNumber: string) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/track/${referenceNumber}`
+      );
+      if (!response.ok) {
+        throw new Error("Request not found");
+      }
+      return response.json();
+    },
+  },
   admin: {
     login: async (data: any) => {
       const response = await fetch(
