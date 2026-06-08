@@ -89,12 +89,23 @@ export function SetAppointmentModal({ isOpen, onClose, request, onSuccess }: Pro
 
             <div className="space-y-1.5">
               <label className="text-sm font-medium text-gray-700">Time</label>
-              <input
-                type="time"
+              <select
                 value={time}
                 onChange={(e) => setTime(e.target.value)}
-                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md outline-none focus:border-emerald-500"
-              />
+                className="w-full px-3 py-2 text-sm border border-gray-200 rounded-md outline-none focus:border-emerald-500 bg-white"
+              >
+                <option value="" disabled>Select a time</option>
+                <option value="08:00">08:00 AM</option>
+                <option value="09:00">09:00 AM</option>
+                <option value="10:00">10:00 AM</option>
+                <option value="11:00">11:00 AM</option>
+                <option value="12:00">12:00 PM</option>
+                <option value="13:00">01:00 PM</option>
+                <option value="14:00">02:00 PM</option>
+                <option value="15:00">03:00 PM</option>
+                <option value="16:00">04:00 PM</option>
+                <option value="17:00">05:00 PM</option>
+              </select>
             </div>
           </form>
         </div>

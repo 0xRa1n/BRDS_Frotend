@@ -54,13 +54,20 @@ export function TrackRequestPage() {
       title: t('statusApproved'), 
       subtitle: 'Approved', 
       side: 'right' as const,
-      status: ['Approved', 'Released'].includes(status) ? 'completed' : 'pending'
+      status: ['Approved', 'Confirmed', 'Released'].includes(status) ? 'completed' : 'pending'
+    },
+    {
+      id: 'scheduled',
+      title: 'Scheduled',
+      subtitle: appointmentDate ? `Set for ${appointmentDate}` : 'Waiting for schedule',
+      side: 'left' as const,
+      status: ['Confirmed', 'Released'].includes(status) ? 'completed' : 'pending'
     },
     { 
       id: 'released', 
       title: t('statusReadyForPickup'), 
       subtitle: 'Ready for Pickup', 
-      side: 'left' as const,
+      side: 'right' as const,
       status: status === 'Released' ? 'completed' : 'pending'
     },
   ];
@@ -149,7 +156,10 @@ export function TrackRequestPage() {
                 </div>
                 <h3 className="text-lg font-bold text-[#c26500] mb-2">{t('needsInfoTitle')}</h3>
                 <p className="text-[#c26500] mb-6">{request.remarks || t('needsInfoDesc')}</p>
-                <Button className="bg-[#c26500] hover:bg-orange-600 text-white rounded-full px-8">
+                <Button 
+                  className="bg-[#c26500] hover:bg-orange-600 text-white rounded-full px-8"
+                  onClick={() => navigate('/request?step=2')}
+                >
                   {t('updateInfoBtn')}
                 </Button>
               </div>

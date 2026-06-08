@@ -200,9 +200,7 @@ export function AdminRequestDetailsPage() {
                   </div>
                   <div className="md:col-span-2">
                     <p className="text-sm text-gray-500 mb-1">Address</p>
-                    <p className="font-medium text-gray-900">
-                      Address not provided by DB model
-                    </p>
+                    <p className="font-medium text-gray-900">{request.address || "N/A"}</p>
                   </div>
                   <div className="md:col-span-2">
                     <p className="text-sm text-gray-500 mb-1">

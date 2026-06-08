@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useSearchParams } from "react-router";
 import { motion, AnimatePresence } from "motion/react";
 import { Step1DocumentType } from "@/components/request/Step1DocumentType";
 import { Step2PersonalInfo } from "@/components/request/Step2PersonalInfo";
@@ -12,7 +12,9 @@ import { useLanguage } from "@/contexts/LanguageContext";
 export function DocumentRequestPage() {
   const navigate = useNavigate();
   const { t } = useLanguage();
-  const [currentStep, setCurrentStep] = useState(1);
+  const [searchParams] = useSearchParams();
+  const initialStep = searchParams.get("step") ? parseInt(searchParams.get("step") as string) : 1;
+  const [currentStep, setCurrentStep] = useState(initialStep);
   const [direction, setDirection] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [referenceNumber, setReferenceNumber] = useState("");
