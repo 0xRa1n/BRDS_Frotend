@@ -21,6 +21,11 @@ export function AdminLoginPage() {
       const res = await api.admin.login({ username, password });
       localStorage.setItem("admin_token", res.token);
       localStorage.setItem("admin_role", res.role);
+      if (res.fullName) {
+        localStorage.setItem("admin_full_name", res.fullName);
+      } else {
+        localStorage.removeItem("admin_full_name");
+      }
       toast.success("Login successful");
       navigate("/admin/dashboard");
     } catch (err: any) {
@@ -83,14 +88,6 @@ export function AdminLoginPage() {
           <button className="text-sm text-slate-600 hover:text-slate-800 transition-colors">
             Forgot password?
           </button>
-        </div>
-
-        <div className="mt-8 pt-6 border-t border-gray-100 text-center">
-          <p className="text-xs text-gray-400">
-            Authorized personnel only.
-            <br />
-            Unauthorized access is prohibited.
-          </p>
         </div>
       </div>
     </div>

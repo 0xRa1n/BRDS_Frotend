@@ -1,19 +1,24 @@
-import { LayoutDashboard, Calendar, Settings, ChevronLeft, LogOut } from "lucide-react";
+import { LayoutDashboard, Calendar, Settings, ChevronLeft, LogOut, Users } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 export function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const role = localStorage.getItem("admin_role");
+  const isAdmin = role && role.toLowerCase() === "admin";
 
   const handleLogout = () => {
     localStorage.removeItem("admin_token");
     localStorage.removeItem("admin_role");
+    localStorage.removeItem("admin_full_name");
     navigate("/admin/login");
   };
 
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
     { icon: Calendar, label: "Schedule", path: "/admin/schedule" },
+    // Only show User Management for admins
+    ...(isAdmin ? [{ icon: Users, label: "User Management", path: "/admin/users" }] : []),
     { icon: Settings, label: "Settings", path: "/admin/settings" },
   ];
 

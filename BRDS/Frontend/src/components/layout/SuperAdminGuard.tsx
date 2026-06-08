@@ -2,20 +2,20 @@ import { Navigate } from "react-router";
 import { toast } from "sonner";
 import { useEffect } from "react";
 
-export function AdminGuard({ children }: { children: React.ReactNode }) {
+export function SuperAdminGuard({ children }: { children: React.ReactNode }) {
   const token = localStorage.getItem("admin_token");
   const role = localStorage.getItem("admin_role");
 
-  const isAuthenticated = token && role && (role.toLowerCase() === "admin" || role.toLowerCase() === "staff");
+  const isAuthenticated = token && role && role.toLowerCase() === "admin";
 
   useEffect(() => {
     if (!isAuthenticated) {
-      toast.error("Unauthorized access. Please login.", { id: "admin-auth" });
+      toast.error("Super Admin privileges required.", { id: "superadmin-auth" });
     }
   }, [isAuthenticated]);
 
   if (!isAuthenticated) {
-    return <Navigate to="/admin/login" replace />;
+    return <Navigate to="/admin/dashboard" replace />;
   }
 
   return <>{children}</>;

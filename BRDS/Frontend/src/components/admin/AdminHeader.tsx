@@ -5,6 +5,19 @@ export function AdminHeader() {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const fullName = localStorage.getItem("admin_full_name") || "User";
+  const role = localStorage.getItem("admin_role") || "Staff";
+
+  // Generate initials (e.g. "Maria Santos" -> "MS")
+  const getInitials = (name: string) => {
+    const names = name.trim().split(" ");
+    if (names.length >= 2) {
+      return `${names[0][0]}${names[names.length - 1][0]}`.toUpperCase();
+    }
+    return name.substring(0, 2).toUpperCase();
+  };
+  const initials = getInitials(fullName);
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -82,11 +95,11 @@ export function AdminHeader() {
 
         <div className="flex items-center gap-3 border-l border-gray-100 pl-6">
           <div className="text-right hidden sm:block">
-            <p className="text-sm font-bold text-gray-900 leading-tight">Maria Santos</p>
-            <p className="text-xs text-gray-500">Front Desk Staff</p>
+            <p className="text-sm font-bold text-gray-900 leading-tight">{fullName}</p>
+            <p className="text-xs text-gray-500">{role}</p>
           </div>
           <div className="w-9 h-9 rounded-full bg-gray-100 text-gray-600 flex items-center justify-center font-bold text-sm">
-            MS
+            {initials}
           </div>
         </div>
       </div>

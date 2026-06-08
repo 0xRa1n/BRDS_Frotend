@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router";
 import { Toaster } from "sonner";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
@@ -12,8 +12,10 @@ import { DashboardPage } from "@/pages/DashboardPage";
 import { AllRequestsPage } from "@/pages/AllRequestsPage";
 import { AuthGuard } from "@/components/layout/AuthGuard";
 import { AdminGuard } from "@/components/layout/AdminGuard";
+import { SuperAdminGuard } from "@/components/layout/SuperAdminGuard";
 import { AdminLoginPage } from "@/pages/admin/AdminLoginPage";
 import { AdminDashboardPage } from "@/pages/admin/AdminDashboardPage";
+import { AdminUsersPage } from "@/pages/admin/AdminUsersPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -33,6 +35,7 @@ function App() {
     <LanguageProvider>
       <BrowserRouter>
         <Routes>
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="/admin/login" element={<AdminLoginPage />} />
           <Route 
             path="/admin/dashboard" 
@@ -42,6 +45,15 @@ function App() {
               </AdminGuard>
             } 
           />
+          <Route 
+            path="/admin/users" 
+            element={
+              <SuperAdminGuard>
+                <AdminUsersPage />
+              </SuperAdminGuard>
+            } 
+          />
+          <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
           <Route path="/*" element={
             <PublicLayout>
               <Routes>
