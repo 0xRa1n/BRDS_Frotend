@@ -1,9 +1,11 @@
-import { LayoutDashboard, Calendar, Settings, ChevronLeft, LogOut, Users } from "lucide-react";
+import { useState } from "react";
+import { LayoutDashboard, Calendar, Settings, ChevronLeft, ChevronRight, LogOut, Users } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 export function AdminSidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const role = localStorage.getItem("admin_role");
   const isAdmin = role && role.toLowerCase() === "admin";
 
@@ -23,12 +25,12 @@ export function AdminSidebar() {
   ];
 
   return (
-    <div className="w-64 bg-[#1b2b48] text-white flex flex-col h-screen shrink-0">
-      <div className="h-16 flex items-center px-6 border-b border-white/10 shrink-0">
-        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-[#1b2b48] font-bold mr-3">
+    <div className={`bg-emerald-600 text-white flex flex-col h-screen shrink-0 transition-all duration-300 ease-in-out ${isCollapsed ? "w-20" : "w-64"} overflow-hidden`}>
+      <div className="h-16 flex items-center border-b border-white/10 shrink-0 px-6">
+        <div className="w-8 h-8 bg-white rounded-full flex items-center justify-center text-emerald-600 font-bold shrink-0">
           BC
         </div>
-        <span className="font-bold text-lg">BarangayConnect</span>
+        <span className={`font-bold text-lg whitespace-nowrap overflow-hidden transition-all duration-300 ${isCollapsed ? "max-w-0 opacity-0 ml-0" : "max-w-[200px] opacity-100 ml-3"}`}>BarangayConnect</span>
       </div>
 
       <div className="flex-1 py-6 flex flex-col gap-2 px-3">
@@ -38,28 +40,40 @@ export function AdminSidebar() {
             <Link
               key={item.label}
               to={item.path}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                isActive ? "bg-white/10 text-white" : "text-gray-400 hover:bg-white/5 hover:text-white"
+              className={`flex items-center gap-3 py-2.5 px-3 rounded-lg text-sm font-medium transition-colors overflow-hidden ${
+                isActive ? "bg-white/20 text-white" : "text-white/70 hover:bg-white/10 hover:text-white"
               }`}
+              title={isCollapsed ? item.label : undefined}
             >
-              <item.icon className="w-4 h-4" />
-              {item.label}
+              <item.icon className="w-5 h-5 shrink-0" />
+              <span className={`whitespace-nowrap transition-all duration-300 overflow-hidden ${isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
+                {item.label}
+              </span>
             </Link>
           );
         })}
       </div>
 
       <div className="p-4 flex flex-col gap-2">
-        <button className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors w-full">
-          <ChevronLeft className="w-4 h-4" />
-          Collapse Menu
+        <button 
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="flex items-center gap-3 py-2 px-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium transition-colors w-full overflow-hidden"
+          title={isCollapsed ? "Expand Menu" : "Collapse Menu"}
+        >
+          {isCollapsed ? <ChevronRight className="w-5 h-5 shrink-0" /> : <ChevronLeft className="w-5 h-5 shrink-0" />}
+          <span className={`whitespace-nowrap transition-all duration-300 overflow-hidden ${isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
+            Collapse Menu
+          </span>
         </button>
         <button 
           onClick={handleLogout}
-          className="flex items-center gap-3 px-3 py-2 text-gray-400 hover:text-white text-sm font-medium transition-colors w-full"
+          className="flex items-center gap-3 py-2 px-3 text-white/70 hover:text-white hover:bg-white/10 rounded-lg text-sm font-medium transition-colors w-full overflow-hidden"
+          title={isCollapsed ? "Sign out" : undefined}
         >
-          <LogOut className="w-4 h-4" />
-          Sign out
+          <LogOut className="w-5 h-5 shrink-0" />
+          <span className={`whitespace-nowrap transition-all duration-300 overflow-hidden ${isCollapsed ? "max-w-0 opacity-0" : "max-w-[200px] opacity-100"}`}>
+            Sign out
+          </span>
         </button>
       </div>
     </div>

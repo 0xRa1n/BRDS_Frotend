@@ -1,3 +1,5 @@
+import { useState, useEffect } from 'react';
+import { api } from '@/lib/api';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -19,6 +21,23 @@ ChartJS.register(
 );
 
 export function AdminInsights() {
+  const [requests, setRequests] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchInsights = async () => {
+      try {
+        const res = await api.admin.getRequests("All");
+        setRequests(res.data || []);
+      } catch (error) {
+        console.error("Failed to load insights", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchInsights();
+  }, []);
+
   const options = {
     indexAxis: 'y' as const,
     elements: {
@@ -59,13 +78,37 @@ export function AdminInsights() {
     }
   };
 
-  const labels = ['Barangay Clearance', 'Certificate of Indigency', 'Certificate of Residency', 'Business Permit Endorsement'];
+  let mostRequested = "None";
+  let mostRequestedCount = 0;
+
+  const documentCounts = requests.reduce((acc: Record<string, number>, req: any) => {
+    if (req.document_type) {
+      const docType = req.document_type.charAt(0).toUpperCase() + req.document_type.slice(1);
+      acc[docType] = (acc[docType] || 0) + 1;
+    }
+    return acc;
+  }, {});
+
+  Object.entries(documentCounts).forEach(([docType, count]) => {
+    if (count > mostRequestedCount) {
+      mostRequestedCount = count;
+      mostRequested = docType;
+    }
+  });
+
+  const totalRequests = requests.length;
+  const pendingRequests = requests.filter(r => r.status?.toLowerCase() === 'pending' || r.status?.toLowerCase() === 'under review').length;
+  const pendingPercentage = totalRequests > 0 ? Math.round((pendingRequests / totalRequests) * 100) : 0;
+
+  const labels = Object.keys(documentCounts).length > 0 ? Object.keys(documentCounts) : ['No Data'];
+  const chartDataValues = Object.keys(documentCounts).length > 0 ? Object.values(documentCounts) : [0];
+
   const data = {
     labels,
     datasets: [
       {
         label: 'Requests',
-        data: [645, 320, 180, 103],
+        data: chartDataValues,
         backgroundColor: '#10b981', // emerald-500
         borderColor: '#10b981',
         barThickness: 12,
@@ -87,28 +130,45 @@ export function AdminInsights() {
             <option>This Year</option>
           </select>
         </div>
-        <div className="h-[250px] w-full">
-          <Bar options={options} data={data} />
+        <div className="h-[250px] w-full overflow-hidden">
+          {isLoading ? (
+            <div className="w-full h-full animate-pulse bg-gray-50 rounded-lg flex items-center justify-center">
+              <span className="text-gray-400 font-medium">Loading chart data...</span>
+            </div>
+          ) : (
+            <div className="h-full w-full animate-in fade-in zoom-in-95 duration-500 fill-mode-forwards">
+              <Bar options={options} data={data} />
+            </div>
+          )}
         </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm">
+      <div className="bg-white rounded-xl border border-gray-100 p-6 shadow-sm flex flex-col">
         <h3 className="text-lg font-bold text-gray-900 mb-6">Quick Insights</h3>
-        <div className="space-y-6">
-          <div className="relative pl-6">
-            <span className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-blue-500"></span>
-            <h4 className="text-sm font-bold text-gray-900 mb-1">Peak Request Time</h4>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              Most residents request documents between 9:00 AM and 11:00 AM.
-            </p>
-          </div>
-          <div className="relative pl-6">
-            <span className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-emerald-500"></span>
-            <h4 className="text-sm font-bold text-gray-900 mb-1">Efficiency Improved</h4>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              Average release time dropped by 15% this week compared to last month.
-            </p>
-          </div>
+        <div className="space-y-6 flex-1">
+          {isLoading ? (
+            <div className="w-full h-full animate-pulse flex flex-col gap-6">
+              <div className="h-16 bg-gray-50 rounded-lg w-full"></div>
+              <div className="h-16 bg-gray-50 rounded-lg w-full"></div>
+            </div>
+          ) : (
+            <div className="animate-in fade-in zoom-in-95 duration-500 fill-mode-forwards space-y-6">
+              <div className="relative pl-6">
+                <span className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-blue-500"></span>
+                <h4 className="text-sm font-bold text-gray-900 mb-1">Most Requested</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  <span className="font-medium text-gray-800">{mostRequested}</span> is currently the most requested document with {mostRequestedCount} requests.
+                </p>
+              </div>
+              <div className="relative pl-6">
+                <span className="absolute left-0 top-1.5 w-2 h-2 rounded-full bg-amber-500"></span>
+                <h4 className="text-sm font-bold text-gray-900 mb-1">Queue Status</h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  {pendingPercentage}% of all document requests ({pendingRequests} total) are currently waiting for review or approval.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

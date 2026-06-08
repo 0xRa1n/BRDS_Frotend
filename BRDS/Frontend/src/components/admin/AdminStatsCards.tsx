@@ -1,20 +1,47 @@
+import { useState, useEffect } from "react";
 import { Inbox, Clock, CheckCircle2, FileText, TrendingUp, TrendingDown } from "lucide-react";
+import { api } from "@/lib/api";
 
 export function AdminStatsCards() {
+  const [statsData, setStatsData] = useState({
+    total: 0,
+    pending: 0,
+    approved: 0,
+    released: 0
+  });
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await api.admin.getRequests("All");
+        const reqs = res.data || [];
+        setStatsData({
+          total: reqs.length,
+          pending: reqs.filter((r: any) => r.status?.toLowerCase() === "pending" || r.status?.toLowerCase() === "under review").length,
+          approved: reqs.filter((r: any) => r.status?.toLowerCase() === "approved").length,
+          released: reqs.filter((r: any) => r.status?.toLowerCase() === "released").length,
+        });
+      } catch (error) {
+        console.error("Failed to load stats", error);
+      }
+    };
+    fetchStats();
+  }, []);
+
   const stats = [
     {
-      title: "Total Today",
-      value: "142",
-      change: "+12%",
+      title: "Total Requests",
+      value: statsData.total.toString(),
+      change: "+0%",
       isPositive: true,
       icon: Inbox,
       iconBg: "bg-blue-50",
       iconColor: "text-blue-500",
     },
     {
-      title: "Pending Review",
-      value: "38",
-      change: "-2%",
+      title: "Pending & Review",
+      value: statsData.pending.toString(),
+      change: "0%",
       isPositive: false,
       icon: Clock,
       iconBg: "bg-amber-50",
@@ -22,8 +49,8 @@ export function AdminStatsCards() {
     },
     {
       title: "Approved",
-      value: "89",
-      change: "+5%",
+      value: statsData.approved.toString(),
+      change: "+0%",
       isPositive: true,
       icon: CheckCircle2,
       iconBg: "bg-emerald-50",
@@ -31,8 +58,8 @@ export function AdminStatsCards() {
     },
     {
       title: "Released",
-      value: "15",
-      change: "+8%",
+      value: statsData.released.toString(),
+      change: "+0%",
       isPositive: true,
       icon: FileText,
       iconBg: "bg-gray-100",

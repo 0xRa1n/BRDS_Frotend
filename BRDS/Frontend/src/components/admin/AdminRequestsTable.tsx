@@ -1,30 +1,23 @@
-import { useState, useEffect } from "react";
-import { Eye, Check, Flag } from "lucide-react";
+import { useState } from "react";
+import { Eye, Check, Flag, RefreshCw, Calendar } from "lucide-react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { SetAppointmentModal } from "./SetAppointmentModal";
+import { useNavigate } from "react-router";
 
 export function AdminRequestsTable() {
   const [activeTab, setActiveTab] = useState("All");
-  const [requests, setRequests] = useState<any[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-
+  const [appointmentRequest, setAppointmentRequest] = useState<any>(null);
   const tabs = ["All", "Pending", "Under Review", "Approved", "Released"];
+  const navigate = useNavigate();
 
-  const fetchRequests = async () => {
-    try {
-      setIsLoading(true);
-      const res = await api.admin.getRequests(activeTab);
-      setRequests(res.data || []);
-    } catch (error) {
-      toast.error("Failed to load requests");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data: res, isLoading, isFetching, refetch } = useQuery({
+    queryKey: ["adminRequests", activeTab],
+    queryFn: () => api.admin.getRequests(activeTab),
+  });
 
-  useEffect(() => {
-    fetchRequests();
-  }, [activeTab]);
+  const requests = res?.data || [];
 
   const getStatusPill = (status: string) => {
     const s = status?.toLowerCase() || "";
@@ -39,20 +32,29 @@ export function AdminRequestsTable() {
 
   return (
     <div className="bg-white rounded-xl border border-gray-100 shadow-sm flex flex-col">
-      <div className="flex border-b border-gray-100 px-6 pt-2">
-        {tabs.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
-              activeTab === tab
-                ? "border-emerald-500 text-emerald-600"
-                : "border-transparent text-gray-500 hover:text-gray-700"
-            }`}
-          >
-            {tab}
-          </button>
-        ))}
+      <div className="flex border-b border-gray-100 px-6 pt-2 justify-between items-center">
+        <div className="flex">
+          {tabs.map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                activeTab === tab
+                  ? "border-emerald-500 text-emerald-600"
+                  : "border-transparent text-gray-500 hover:text-gray-700"
+              }`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
+        <button 
+          onClick={() => refetch()}
+          className="flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-md transition-colors"
+        >
+          <RefreshCw className={`w-4 h-4 ${isFetching ? 'animate-spin' : ''}`} />
+          Refresh
+        </button>
       </div>
 
       <div className="overflow-x-auto">
@@ -85,13 +87,13 @@ export function AdminRequestsTable() {
                   <tr key={req.ID} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-sm font-medium text-gray-900">{req.reference_number}</td>
                     <td className="px-6 py-4 text-sm text-gray-900">{req.user?.full_name || "Unknown"}</td>
-                    <td className="px-6 py-4 text-sm text-gray-600">{req.document_type}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{req.document_type ? req.document_type.charAt(0).toUpperCase() + req.document_type.slice(1) : ""}</td>
                     <td className="px-6 py-4 text-sm text-gray-600">{dateString}</td>
                     <td className="px-6 py-4">{getStatusPill(req.status)}</td>
                     <td className="px-6 py-4 text-right">
                       <div className="flex items-center justify-end gap-3">
-                        <button className="text-gray-400 hover:text-gray-900 transition-colors" title="View"><Eye className="w-4 h-4" /></button>
-                        <button className="text-emerald-500 hover:text-emerald-600 transition-colors" title="Approve"><Check className="w-4 h-4" /></button>
+                        <button onClick={() => navigate(`/admin/requests/${req.ID}`)} className="text-gray-400 hover:text-gray-900 transition-colors" title="View"><Eye className="w-4 h-4" /></button>
+                        <button onClick={() => setAppointmentRequest(req)} className="text-emerald-500 hover:text-emerald-600 transition-colors" title="Set Appointment"><Calendar className="w-4 h-4" /></button>
                         <button className="text-amber-500 hover:text-amber-600 transition-colors" title="Flag"><Flag className="w-4 h-4" /></button>
                       </div>
                     </td>
@@ -113,6 +115,13 @@ export function AdminRequestsTable() {
           <button className="px-3 py-1.5 border border-gray-200 rounded text-gray-600 hover:bg-gray-50">Next</button>
         </div>
       </div>
+      
+      <SetAppointmentModal
+        isOpen={!!appointmentRequest}
+        onClose={() => setAppointmentRequest(null)}
+        request={appointmentRequest}
+        onSuccess={() => refetch()}
+      />
     </div>
   );
 }

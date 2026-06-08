@@ -109,6 +109,31 @@ export const api = {
         throw new Error(errorData?.error || "Failed to create request");
       }
       return response.json();
+    },
+    getRequest: async (id: string) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests/${id}`,
+        {
+          headers: getAdminAuthHeaders(),
+        }
+      );
+      if (!response.ok) throw new Error("Failed to fetch request details");
+      return response.json();
+    },
+    updateRequestStatus: async (id: string, status: string, remarks?: string) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests/${id}/status`,
+        {
+          method: "PUT",
+          headers: getAdminAuthHeaders(),
+          body: JSON.stringify({ status, remarks }),
+        }
+      );
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => null);
+        throw new Error(errorData?.error || "Failed to update request status");
+      }
+      return response.json();
     }
   },
   user: {

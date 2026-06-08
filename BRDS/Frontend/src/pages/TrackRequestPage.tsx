@@ -19,6 +19,7 @@ export function TrackRequestPage() {
     id: id || '#BR-2024-0041',
     type: 'Barangay Clearance',
     submittedAt: 'June 7, 2026',
+    appointmentDate: null, // e.g., 'June 10, 2026 at 09:00 AM'
   };
 
   const steps = [
@@ -62,6 +63,19 @@ export function TrackRequestPage() {
             
             <h2 className="text-lg font-bold text-gray-900 mb-1">{request.type}</h2>
             <p className="text-sm text-gray-500">Submitted: {request.submittedAt}</p>
+          </div>
+
+          {/* Appointment Notice */}
+          <div className="mb-6 relative z-10 bg-blue-50 border border-blue-200 rounded-2xl p-6 text-center">
+            <div className="flex justify-center mb-3">
+              <Calendar className="w-8 h-8 text-blue-500" />
+            </div>
+            <h3 className="text-lg font-bold text-blue-700 mb-2">Appointment Schedule</h3>
+            {request.appointmentDate ? (
+              <p className="text-blue-600">Your appointment is scheduled for <span className="font-bold">{request.appointmentDate}</span>.</p>
+            ) : (
+              <p className="text-blue-600">Your request will be scheduled on a specific date once reviewed by the admin or staff. You will receive an SMS notification.</p>
+            )}
           </div>
 
           {/* Status Alerts */}

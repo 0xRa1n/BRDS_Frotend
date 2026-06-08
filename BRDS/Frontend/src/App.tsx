@@ -16,6 +16,8 @@ import { SuperAdminGuard } from "@/components/layout/SuperAdminGuard";
 import { AdminLoginPage } from "@/pages/admin/AdminLoginPage";
 import { AdminDashboardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminUsersPage } from "@/pages/admin/AdminUsersPage";
+import { AdminSchedulePage } from "@/pages/admin/AdminSchedulePage";
+import { AdminRequestDetailsPage } from "@/pages/admin/AdminRequestDetailsPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -51,6 +53,22 @@ function App() {
               <SuperAdminGuard>
                 <AdminUsersPage />
               </SuperAdminGuard>
+            } 
+          />
+          <Route 
+            path="/admin/schedule" 
+            element={
+              <AdminGuard>
+                <AdminSchedulePage />
+              </AdminGuard>
+            } 
+          />
+          <Route 
+            path="/admin/requests/:id" 
+            element={
+              <AdminGuard>
+                <AdminRequestDetailsPage />
+              </AdminGuard>
             } 
           />
           <Route path="/admin/*" element={<Navigate to="/admin/dashboard" replace />} />
