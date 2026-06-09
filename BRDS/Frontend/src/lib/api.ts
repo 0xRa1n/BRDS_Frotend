@@ -174,7 +174,7 @@ export const api = {
       return response.json();
     },
     getPortalUsers: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users?type=users`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -182,7 +182,7 @@ export const api = {
       return response.json();
     },
     updatePortalUser: async (id: string, data: any) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${id}?type=users`, {
         method: "PUT",
         headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -195,7 +195,7 @@ export const api = {
       return response.json();
     },
     deletePortalUser: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users/${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${id}?type=users`, {
         method: "DELETE",
         headers: getAdminAuthHeaders(),
         credentials: "include",
@@ -204,7 +204,7 @@ export const api = {
       return response.json();
     },
     getArchivedAdmins: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users?type=staffs`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -212,7 +212,7 @@ export const api = {
       return response.json();
     },
     recoverAdmin: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover?type=staffs`, {
         method: "POST",
         headers: getAdminAuthHeaders(),
         credentials: "include",
@@ -221,7 +221,7 @@ export const api = {
       return response.json();
     },
     getArchivedPortalUsers: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/portal-users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users?type=users`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -229,7 +229,7 @@ export const api = {
       return response.json();
     },
     recoverPortalUser: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/portal-users/${id}/recover`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover?type=users`, {
         method: "POST",
         headers: getAdminAuthHeaders(),
         credentials: "include",

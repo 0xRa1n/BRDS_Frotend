@@ -22,7 +22,7 @@ export function AdminUsersTable() {
   const { data: res, isLoading: loading, isFetching, refetch } = useQuery({
     queryKey: ['adminUsers'],
     queryFn: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users?type=staffs`, {
         credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch users");
@@ -49,7 +49,7 @@ export function AdminUsersTable() {
     const payload = Object.fromEntries(formData);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users?type=staffs`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -78,7 +78,7 @@ export function AdminUsersTable() {
     const payload = Object.fromEntries(formData);
 
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}?type=staffs`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,7 @@ export function AdminUsersTable() {
   const handleDeleteSubmit = async () => {
     if (!selectedUser) return;
     try {
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}?type=staffs`, {
         method: "DELETE",
         credentials: "include",
       });
