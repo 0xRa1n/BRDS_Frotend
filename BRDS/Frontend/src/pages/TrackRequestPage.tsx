@@ -51,10 +51,10 @@ export function TrackRequestPage() {
     },
     { 
       id: 'approved', 
-      title: t('statusApproved'), 
-      subtitle: 'Approved', 
+      title: t('statusConfirmed'), 
+      subtitle: 'Confirmed', 
       side: 'right' as const,
-      status: ['Approved', 'Confirmed', 'Released'].includes(status) ? 'completed' : 'pending'
+      status: ['Confirmed', 'Released'].includes(status) ? 'completed' : 'pending'
     },
     {
       id: 'scheduled',
@@ -175,12 +175,12 @@ export function TrackRequestPage() {
               </div>
             )}
 
-            {status === 'Approved' && (
+            {status === 'Confirmed' && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-6 text-center">
                 <div className="flex justify-center mb-3">
                   <Check className="w-8 h-8 text-emerald-500" />
                 </div>
-                <h3 className="text-lg font-bold text-emerald-700 mb-2">{t('approvedTitle')}</h3>
+                <h3 className="font-bold text-gray-900 mb-1">{t('confirmedTitle')}</h3>
                 <p className="text-emerald-600 mb-6">{t('approvedDesc')}</p>
               </div>
             )}

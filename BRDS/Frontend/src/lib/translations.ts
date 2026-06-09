@@ -73,12 +73,12 @@ export const translations = {
     requestStatusTitle: "Request Status",
     statusReceived: "Received",
     statusUnderReview: "Under Review",
-    statusApproved: "Approved",
+    statusConfirmed: "Confirmed",
     statusReadyForPickup: "Ready for Pickup",
     needsInfoTitle: "Needs Information",
     needsInfoDesc: "The uploaded ID is blurry. Please upload again.",
     updateInfoBtn: "Update Information",
-    approvedTitle: "Approved!",
+    confirmedTitle: "Confirmed!",
     approvedDesc: "Go to the Barangay Hall, Monday–Friday, 8am–5pm.",
     schedulePickupBtn: "Schedule Pickup",
     releasedTitle: "Released",
@@ -92,8 +92,6 @@ export const translations = {
     showingEntries: "Showing {start} to {end} of {total} entries",
     allPastRequests: "All Past Requests",
     transactionHistory: "History of your barangay transactions",
-    noPastRequests: "No past requests yet.",
-    showingEntries: "Showing {startEntry} to {endEntry} of {total} entries",
   },
   fil: {
     // Header
@@ -169,12 +167,12 @@ export const translations = {
     requestStatusTitle: "Status ng iyong Request",
     statusReceived: "Natanggap",
     statusUnderReview: "Sinusuri",
-    statusApproved: "Naaprubahan",
+    statusConfirmed: "Kumpirmado",
     statusReadyForPickup: "Pwede na i-pick up",
     needsInfoTitle: "Needs Information",
     needsInfoDesc: "Malabo ang na-upload na ID. Paki-upload muli.",
     updateInfoBtn: "Mag-update ng impormasyon",
-    approvedTitle: "Approved!",
+    confirmedTitle: "Kumpirmado!",
     approvedDesc: "Pumunta sa Barangay Hall, Lunes–Biyernes, 8am–5pm.",
     schedulePickupBtn: "I-schedule ang Pickup",
     docRetrievedMsg: "Nakuha na ang inyong dokumento.",
@@ -186,9 +184,6 @@ export const translations = {
     showingEntries: "Pinapakita ang {start} hanggang {end} ng {total} entries",
     allPastRequests: "Lahat ng Nakaraang Request",
     transactionHistory: "Kasaysayan ng iyong mga transaksyon sa barangay",
-    noPastRequests: "Wala pang nakaraang request.",
-    showingEntries:
-      "Pinapakita ang {startEntry} hanggang {endEntry} ng {total} entries",
   },
 };
 

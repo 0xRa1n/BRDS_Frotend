@@ -162,7 +162,7 @@ export function AdminScheduleCalendar({ requests, isLoading, isFetching, refetch
                   <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
                     selectedRequest.status === 'Confirmed' ? 'bg-emerald-100 text-emerald-700' :
                     selectedRequest.status === 'Pending Reschedule' ? 'bg-amber-100 text-amber-700' :
-                    selectedRequest.status === 'Missed' ? 'bg-red-100 text-red-700' :
+                    selectedRequest.status === 'Missed' || selectedRequest.status === 'Rejected' ? 'bg-red-100 text-red-700' :
                     'bg-blue-100 text-blue-700'
                   }`}>
                     {selectedRequest.status}

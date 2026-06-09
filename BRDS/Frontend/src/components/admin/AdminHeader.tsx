@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Bell } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 
 export function AdminHeader() {
   const [isNotifOpen, setIsNotifOpen] = useState(false);
@@ -28,29 +30,47 @@ export function AdminHeader() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const notifications = [
-    {
-      id: 1,
-      title: "New Request",
-      desc: "Juan Dela Cruz requested a Barangay Clearance.",
-      time: "5m ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      title: "Meeting Reminder",
-      desc: "Staff meeting in 15 minutes.",
-      time: "15m ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      title: "System Update",
-      desc: "Portal maintenance scheduled for midnight.",
-      time: "2h ago",
-      unread: false,
-    },
-  ];
+  const { data: requestsData } = useQuery({
+    queryKey: ["admin_notifications"],
+    queryFn: () => api.admin.getRequests("Pending"),
+    refetchInterval: 10000,
+    refetchIntervalInBackground: true,
+  });
+
+  const allRequests = requestsData?.data || [];
+  
+  // Sort requests by newest first
+  const pendingRequests = [...allRequests].sort((a, b) => {
+    return new Date(b.CreatedAt).getTime() - new Date(a.CreatedAt).getTime();
+  });
+
+  const lastReadTimeStr = localStorage.getItem("admin_notifications_last_read");
+  const lastReadTime = lastReadTimeStr ? parseInt(lastReadTimeStr) : 0;
+
+  // Check if there's any pending request created after lastReadTime
+  const hasUnread = pendingRequests.some(req => new Date(req.CreatedAt).getTime() > lastReadTime);
+
+  const handleToggleNotif = () => {
+    if (!isNotifOpen && pendingRequests.length > 0) {
+      // Set last read to the timestamp of the newest pending request to prevent clock skew issues
+      const newestTime = new Date(pendingRequests[0].CreatedAt).getTime();
+      localStorage.setItem("admin_notifications_last_read", newestTime.toString());
+    } else if (!isNotifOpen) {
+      localStorage.setItem("admin_notifications_last_read", Date.now().toString());
+    }
+    setIsNotifOpen(!isNotifOpen);
+  };
+
+  const getTimeAgo = (dateString: string) => {
+    const seconds = Math.floor((new Date().getTime() - new Date(dateString).getTime()) / 1000);
+    if (seconds < 60) return `${seconds}s ago`;
+    const minutes = Math.floor(seconds / 60);
+    if (minutes < 60) return `${minutes}m ago`;
+    const hours = Math.floor(minutes / 60);
+    if (hours < 24) return `${hours}h ago`;
+    const days = Math.floor(hours / 24);
+    return `${days}d ago`;
+  };
 
   return (
     <div className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-6 shrink-0 relative z-40">
@@ -60,10 +80,12 @@ export function AdminHeader() {
         <div className="relative" ref={dropdownRef}>
           <button 
             className="relative p-2 text-gray-500 hover:text-gray-700 transition-colors"
-            onClick={() => setIsNotifOpen(!isNotifOpen)}
+            onClick={handleToggleNotif}
           >
             <Bell className="w-5 h-5" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            {hasUnread && (
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
+            )}
           </button>
 
           {isNotifOpen && (
@@ -73,18 +95,27 @@ export function AdminHeader() {
                 <button className="text-xs text-emerald-600 font-medium hover:underline">Mark all as read</button>
               </div>
               <div className="max-h-80 overflow-y-auto">
-                {notifications.map((notif) => (
-                  <div key={notif.id} className="p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer relative">
-                    {notif.unread && (
-                      <span className="absolute top-5 left-4 w-2 h-2 bg-emerald-500 rounded-full"></span>
-                    )}
-                    <div className={`${notif.unread ? 'pl-5' : ''}`}>
-                      <h4 className="font-bold text-gray-900 text-sm">{notif.title}</h4>
-                      <p className="text-gray-500 text-sm mt-0.5">{notif.desc}</p>
-                      <span className="text-xs text-gray-400 mt-1 block">{notif.time}</span>
-                    </div>
-                  </div>
-                ))}
+                {pendingRequests.length === 0 ? (
+                  <div className="p-4 text-center text-sm text-gray-500">No new notifications</div>
+                ) : (
+                  pendingRequests.slice(0, 5).map((req: any) => {
+                    const isUnread = new Date(req.CreatedAt).getTime() > lastReadTime;
+                    return (
+                      <div key={req.ID} className="p-4 border-b border-gray-50 hover:bg-gray-50 transition-colors cursor-pointer relative">
+                        {isUnread && (
+                          <span className="absolute top-5 left-4 w-2 h-2 bg-emerald-500 rounded-full"></span>
+                        )}
+                        <div className={`${isUnread ? 'pl-5' : ''}`}>
+                          <h4 className="font-bold text-gray-900 text-sm">New Request</h4>
+                          <p className="text-gray-500 text-sm mt-0.5">
+                            {req.user?.full_name || "Someone"} requested a {req.document_type || "document"}.
+                          </p>
+                          <span className="text-xs text-gray-400 mt-1 block">{getTimeAgo(req.CreatedAt)}</span>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
               </div>
               <div className="p-3 bg-white text-center border-t border-gray-50">
                 <button className="text-sm text-emerald-600 font-medium hover:underline">View All Notifications</button>

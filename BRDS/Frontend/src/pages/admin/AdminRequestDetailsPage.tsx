@@ -87,9 +87,8 @@ export function AdminRequestDetailsPage() {
 
   const getStatusPillColor = (status: string) => {
     switch (status) {
-      case "Approved":
-      case "Released":
       case "Confirmed":
+      case "Released":
         return "bg-emerald-100 text-emerald-700 border border-emerald-200";
       case "Pending":
         return "bg-amber-100 text-amber-700 border border-amber-200";
@@ -288,7 +287,7 @@ export function AdminRequestDetailsPage() {
                     <div className="flex flex-col items-center">
                       <div
                         className={`w-9 h-9 rounded-full border-2 flex items-center justify-center shrink-0 shadow-sm ${
-                          ["Approved", "Released", "Confirmed"].includes(
+                          ["Confirmed", "Released"].includes(
                             request.status,
                           )
                             ? "border-emerald-200 bg-emerald-50 text-emerald-500"
@@ -301,7 +300,7 @@ export function AdminRequestDetailsPage() {
                     <div className="pt-1">
                       <p
                         className={`font-semibold text-sm leading-tight ${
-                          ["Approved", "Released", "Confirmed"].includes(
+                          ["Confirmed", "Released"].includes(
                             request.status,
                           )
                             ? "text-gray-900"
@@ -310,7 +309,7 @@ export function AdminRequestDetailsPage() {
                       >
                         Approval
                       </p>
-                      {!["Approved", "Released", "Confirmed"].includes(
+                      {!["Confirmed", "Released"].includes(
                         request.status,
                       ) && (
                         <p className="text-xs text-gray-400 mt-1">Pending</p>
@@ -339,7 +338,7 @@ export function AdminRequestDetailsPage() {
                   {/* Approve Request */}
                   <button
                     disabled={isUpdating}
-                    onClick={() => handleUpdateStatus("Approved")}
+                    onClick={() => handleUpdateStatus("Confirmed")}
                     className="w-full flex items-center justify-start gap-4 px-6 py-4 mb-4 rounded-md bg-emerald-600 hover:bg-emerald-700 text-white transition-colors text-sm font-medium disabled:opacity-50"
                   >
                     <Check className="w-5 h-5 shrink-0" />

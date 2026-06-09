@@ -177,6 +177,7 @@ export function SetAppointmentModal({ isOpen, onClose, request, onSuccess }: Pro
                 <option value="Missed">Missed</option>
                 <option value="Completed">Completed</option>
                 <option value="Cancelled">Cancelled</option>
+                <option value="Rejected">Rejected</option>
               </select>
             </div>
           </form>

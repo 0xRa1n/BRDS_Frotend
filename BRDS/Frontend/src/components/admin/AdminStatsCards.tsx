@@ -48,7 +48,7 @@ export function AdminStatsCards() {
       iconColor: "text-amber-500",
     },
     {
-      title: "Approved",
+      title: "Confirmed",
       value: statsData.approved.toString(),
       change: "+0%",
       isPositive: true,

@@ -64,7 +64,6 @@ export const api = {
         );
       }
       return response.json();
-      return response.json();
     },
     logout: async () => {
       const response = await fetch(
