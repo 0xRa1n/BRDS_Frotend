@@ -1,9 +1,9 @@
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
 import { AdminHeader } from "@/components/admin/AdminHeader";
-import { AdminUsersTable } from "@/components/admin/AdminUsersTable";
-import { AdminPortalUsersTable } from "@/components/admin/AdminPortalUsersTable";
+import { AdminArchivedAdminsTable } from "@/components/admin/AdminArchivedAdminsTable";
+import { AdminArchivedPortalUsersTable } from "@/components/admin/AdminArchivedPortalUsersTable";
 
-export function AdminUsersPage() {
+export function AdminArchivesPage() {
   return (
     <div className="flex h-screen bg-[#f8fafc] overflow-hidden font-sans">
       <AdminSidebar />
@@ -14,14 +14,14 @@ export function AdminUsersPage() {
         <div className="flex-1 overflow-y-auto p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-              <p className="text-sm text-gray-500 mt-1">Manage admin and staff accounts.</p>
+              <h1 className="text-2xl font-bold text-gray-900">Archives</h1>
+              <p className="text-sm text-gray-500 mt-1">Manage deleted admin, staff, and portal user accounts.</p>
             </div>
           </div>
 
-          <AdminUsersTable />
+          <AdminArchivedAdminsTable />
           
-          <AdminPortalUsersTable />
+          <AdminArchivedPortalUsersTable />
         </div>
       </div>
     </div>

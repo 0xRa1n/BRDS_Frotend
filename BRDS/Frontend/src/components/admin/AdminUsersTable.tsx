@@ -10,7 +10,6 @@ interface AdminUser {
   fullName: string;
   username: string;
   role: string;
-  status: string;
   loginHistory: string[] | null;
 }
 
@@ -31,7 +30,17 @@ export function AdminUsersTable() {
     }
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
+
   const users = res?.data || [];
+  
+  const totalPages = Math.ceil(users.length / itemsPerPage);
+  const paginatedUsers = users.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
+
   const fetchUsers = () => refetch();
 
   const handleAddSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -151,13 +160,12 @@ export function AdminUsersTable() {
               <th className="p-4 font-medium">Unique ID</th>
               <th className="p-4 font-medium">Full Name</th>
               <th className="p-4 font-medium">Role</th>
-              <th className="p-4 font-medium">Status</th>
               <th className="p-4 font-medium">Last Login</th>
               <th className="p-4 font-medium">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {users.map((user) => (
+            {paginatedUsers.map((user: AdminUser) => (
               <tr key={user.ID} className="hover:bg-gray-50 transition-colors">
                 <td className="p-4 text-sm font-medium text-gray-900">{user.uniqueId}</td>
                 <td className="p-4 text-sm text-gray-600">{user.fullName}</td>
@@ -168,15 +176,6 @@ export function AdminUsersTable() {
                       : 'bg-secondary text-secondary-foreground'
                   }`}>
                     {user.role}
-                  </span>
-                </td>
-                <td className="p-4">
-                  <span className={`px-2.5 py-1 rounded-full text-xs font-medium ${
-                    user.status === 'Active' 
-                      ? 'bg-primary/10 text-primary' 
-                      : 'bg-destructive/10 text-destructive'
-                  }`}>
-                    {user.status}
                   </span>
                 </td>
                 <td className="p-4 text-sm text-gray-500 whitespace-nowrap">
@@ -212,6 +211,43 @@ export function AdminUsersTable() {
         </table>
       </div>
 
+      <div className="flex items-center justify-between p-4 border-t border-gray-100 bg-gray-50/50">
+        <span className="text-sm text-gray-500">
+          Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+          {Math.min(currentPage * itemsPerPage, users.length)} of {users.length}{" "}
+          entries
+        </span>
+        <div className="flex gap-1">
+          <button
+            onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className="px-3 py-1 text-sm border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Prev
+          </button>
+          {Array.from({ length: totalPages }).map((_, i) => (
+            <button
+              key={i}
+              onClick={() => setCurrentPage(i + 1)}
+              className={`px-3 py-1 text-sm border rounded ${
+                currentPage === i + 1
+                  ? "bg-primary text-white border-primary"
+                  : "border-gray-200 text-gray-600 hover:bg-gray-50"
+              }`}
+            >
+              {i + 1}
+            </button>
+          ))}
+          <button
+            onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+            disabled={currentPage === totalPages || totalPages === 0}
+            className="px-3 py-1 text-sm border border-gray-200 rounded text-gray-600 hover:bg-gray-50 disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+
       {/* Add User Modal */}
       {isAddModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
@@ -242,14 +278,7 @@ export function AdminUsersTable() {
                   <option value="Staff">Staff</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select name="status" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none bg-white">
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <Button type="button" variant="outline" onClick={() => setIsAddModalOpen(false)}>Cancel</Button>
                 <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Add Account</Button>
               </div>
@@ -288,14 +317,7 @@ export function AdminUsersTable() {
                   <option value="Staff">Staff</option>
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                <select defaultValue={selectedUser.status} name="status" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary outline-none bg-white">
-                  <option value="Active">Active</option>
-                  <option value="Inactive">Inactive</option>
-                </select>
-              </div>
-              <div className="pt-4 flex justify-end gap-3">
+              <div className="flex justify-end gap-3 pt-4 border-t border-gray-100">
                 <Button type="button" variant="outline" onClick={() => setIsEditModalOpen(false)}>Cancel</Button>
                 <Button type="submit" className="bg-emerald-600 hover:bg-emerald-700 text-white">Save Changes</Button>
               </div>

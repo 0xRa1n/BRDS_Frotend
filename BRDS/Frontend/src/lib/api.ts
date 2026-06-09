@@ -144,23 +144,97 @@ export const api = {
           credentials: "include",
         }
       );
-      if (!response.ok) throw new Error("Failed to fetch request details");
+      if (!response.ok) throw new Error("Failed to fetch request");
       return response.json();
     },
-    updateRequestStatus: async (id: string, status: string, remarks?: string) => {
+    updateStatus: async (id: string, status: string) => {
       const response = await fetch(
         `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}/status`,
         {
           method: "PUT",
-          headers: getAdminAuthHeaders(),
-          body: JSON.stringify({ status, remarks }),
+          headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
+          body: JSON.stringify({ status }),
           credentials: "include",
         }
       );
+      if (!response.ok) throw new Error("Failed to update status");
+      return response.json();
+    },
+    setAppointment: async (id: string, appointmentDate: string, appointmentTime: string, status: string) => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}/appointment`,
+        {
+          method: "PUT",
+          headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
+          body: JSON.stringify({ appointmentDate, appointmentTime, status }),
+          credentials: "include",
+        }
+      );
+      if (!response.ok) throw new Error("Failed to set appointment");
+      return response.json();
+    },
+    getPortalUsers: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users`, {
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch portal users");
+      return response.json();
+    },
+    updatePortalUser: async (id: string, data: any) => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users/${id}`, {
+        method: "PUT",
+        headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+        credentials: "include",
+      });
       if (!response.ok) {
-        const errorData = await response.json().catch(() => null);
-        throw new Error(errorData?.error || "Failed to update request status");
+        const err = await response.json().catch(() => null);
+        throw new Error(err?.error || "Failed to update portal user");
       }
+      return response.json();
+    },
+    deletePortalUser: async (id: string) => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/portal-users/${id}`, {
+        method: "DELETE",
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to delete portal user");
+      return response.json();
+    },
+    getArchivedAdmins: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users`, {
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch archived admins");
+      return response.json();
+    },
+    recoverAdmin: async (id: string) => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover`, {
+        method: "POST",
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to recover admin");
+      return response.json();
+    },
+    getArchivedPortalUsers: async () => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/portal-users`, {
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to fetch archived portal users");
+      return response.json();
+    },
+    recoverPortalUser: async (id: string) => {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/portal-users/${id}/recover`, {
+        method: "POST",
+        headers: getAdminAuthHeaders(),
+        credentials: "include",
+      });
+      if (!response.ok) throw new Error("Failed to recover portal user");
       return response.json();
     }
   },

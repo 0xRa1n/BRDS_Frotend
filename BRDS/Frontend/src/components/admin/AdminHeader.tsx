@@ -33,8 +33,6 @@ export function AdminHeader() {
   const { data: requestsData } = useQuery({
     queryKey: ["admin_notifications"],
     queryFn: () => api.admin.getRequests("Pending"),
-    refetchInterval: 10000,
-    refetchIntervalInBackground: true,
   });
 
   const allRequests = requestsData?.data || [];

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { LayoutDashboard, Calendar, Settings, ChevronLeft, ChevronRight, LogOut, Users } from "lucide-react";
+import { LayoutDashboard, Calendar, Settings, ChevronLeft, ChevronRight, LogOut, Users, Archive } from "lucide-react";
 import { Link, useLocation, useNavigate } from "react-router";
 
 export function AdminSidebar() {
@@ -18,8 +18,11 @@ export function AdminSidebar() {
   const navItems = [
     { icon: LayoutDashboard, label: "Dashboard", path: "/admin/dashboard" },
     { icon: Calendar, label: "Schedule", path: "/admin/schedule" },
-    // Only show User Management for admins
-    ...(isAdmin ? [{ icon: Users, label: "User Management", path: "/admin/users" }] : []),
+    // Only show User Management and Archives for admins
+    ...(isAdmin ? [
+      { icon: Users, label: "User Management", path: "/admin/users" },
+      { icon: Archive, label: "Archives", path: "/admin/archives" }
+    ] : []),
     { icon: Settings, label: "Settings", path: "/admin/settings" },
   ];
 

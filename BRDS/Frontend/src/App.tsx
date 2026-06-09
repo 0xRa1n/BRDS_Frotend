@@ -18,6 +18,7 @@ import { AdminDashboardPage } from "@/pages/admin/AdminDashboardPage";
 import { AdminUsersPage } from "@/pages/admin/AdminUsersPage";
 import { AdminSchedulePage } from "@/pages/admin/AdminSchedulePage";
 import { AdminRequestDetailsPage } from "@/pages/admin/AdminRequestDetailsPage";
+import { AdminArchivesPage } from "@/pages/admin/AdminArchivesPage";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 
 function PublicLayout({ children }: { children: React.ReactNode }) {
@@ -52,6 +53,14 @@ function App() {
             element={
               <SuperAdminGuard>
                 <AdminUsersPage />
+              </SuperAdminGuard>
+            } 
+          />
+          <Route 
+            path="/admin/archives" 
+            element={
+              <SuperAdminGuard>
+                <AdminArchivesPage />
               </SuperAdminGuard>
             } 
           />
