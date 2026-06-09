@@ -3,10 +3,9 @@ import { toast } from "sonner";
 import { useEffect } from "react";
 
 export function AdminGuard({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem("admin_token");
   const role = localStorage.getItem("admin_role");
 
-  const isAuthenticated = token && role && (role.toLowerCase() === "admin" || role.toLowerCase() === "staff");
+  const isAuthenticated = role && (role.toLowerCase() === "admin" || role.toLowerCase() === "staff");
 
   useEffect(() => {
     if (!isAuthenticated) {

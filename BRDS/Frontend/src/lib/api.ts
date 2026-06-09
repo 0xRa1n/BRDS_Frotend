@@ -14,18 +14,14 @@ interface ProfileUpdateRequest {
 }
 
 const getAuthHeaders = () => {
-  const token = localStorage.getItem("jwt_token");
   return {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 };
 
 const getAdminAuthHeaders = () => {
-  const token = localStorage.getItem("admin_token");
   return {
     "Content-Type": "application/json",
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 };
 
@@ -38,6 +34,7 @@ export const api = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
+          credentials: "include",
         },
       );
 
@@ -56,6 +53,7 @@ export const api = {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
+          credentials: "include",
         },
       );
 
@@ -68,11 +66,26 @@ export const api = {
       return response.json();
       return response.json();
     },
+    logout: async () => {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/auth/logout`,
+        {
+          method: "POST",
+          headers: getAuthHeaders(),
+          credentials: "include",
+        },
+      );
+      if (!response.ok) {
+        throw new Error("Failed to logout");
+      }
+      return response.json();
+    },
   },
   public: {
     trackRequest: async (referenceNumber: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/track/${referenceNumber}`
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/track/${referenceNumber}`,
+        { credentials: "include" }
       );
       if (!response.ok) {
         throw new Error("Request not found");
@@ -83,11 +96,12 @@ export const api = {
   admin: {
     login: async (data: any) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/login`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
+          credentials: "include",
         }
       );
       if (!response.ok) {
@@ -97,22 +111,24 @@ export const api = {
       return response.json();
     },
     getRequests: async (status?: string) => {
-      const url = new URL(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests`);
+      const url = new URL(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests`);
       if (status && status !== "All") url.searchParams.append("status", status);
       
       const response = await fetch(url.toString(), {
         headers: getAdminAuthHeaders(),
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch requests");
       return response.json();
     },
     createRequest: async (data: any) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests`,
         {
           method: "POST",
           headers: getAdminAuthHeaders(),
           body: JSON.stringify(data),
+          credentials: "include",
         }
       );
       if (!response.ok) {
@@ -123,9 +139,10 @@ export const api = {
     },
     getRequest: async (id: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}`,
         {
           headers: getAdminAuthHeaders(),
+          credentials: "include",
         }
       );
       if (!response.ok) throw new Error("Failed to fetch request details");
@@ -133,11 +150,12 @@ export const api = {
     },
     updateRequestStatus: async (id: string, status: string, remarks?: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/requests/${id}/status`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}/status`,
         {
           method: "PUT",
           headers: getAdminAuthHeaders(),
           body: JSON.stringify({ status, remarks }),
+          credentials: "include",
         }
       );
       if (!response.ok) {
@@ -154,6 +172,7 @@ export const api = {
         {
           method: "GET",
           headers: getAuthHeaders(),
+          credentials: "include",
         },
       );
       if (!response.ok) {
@@ -168,6 +187,7 @@ export const api = {
           method: "PUT",
           headers: getAuthHeaders(),
           body: JSON.stringify(data),
+          credentials: "include",
         },
       );
       if (!response.ok) {
@@ -186,6 +206,7 @@ export const api = {
           method: "POST",
           headers: { ...headers, "Idempotency-Key": idempotencyKey },
           body: JSON.stringify(data),
+          credentials: "include",
         },
       );
       if (!response.ok) {
@@ -201,6 +222,7 @@ export const api = {
         {
           method: "GET",
           headers,
+          credentials: "include",
         },
       );
       if (!response.ok) {

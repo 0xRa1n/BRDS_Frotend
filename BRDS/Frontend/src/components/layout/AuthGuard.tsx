@@ -1,10 +1,10 @@
 import { Navigate, useLocation } from "react-router";
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const token = localStorage.getItem("jwt_token");
+  const isAuthenticated = localStorage.getItem("is_authenticated");
   const location = useLocation();
 
-  if (!token) {
+  if (!isAuthenticated) {
     return <Navigate to="/" state={{ from: location }} replace />;
   }
 

@@ -101,7 +101,8 @@ export function VerifyOtpPage() {
       const res = await api.auth.verifyOtp({ phone_number: phoneNumber, code });
       
       if (res.token) {
-        localStorage.setItem("jwt_token", res.token);
+        // Token is now set as HttpOnly cookie by backend
+        localStorage.setItem("is_authenticated", "true");
       }
 
       toast.success("Verification successful!");

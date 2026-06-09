@@ -23,9 +23,8 @@ export function AdminUsersTable() {
   const { data: res, isLoading: loading, isFetching, refetch } = useQuery({
     queryKey: ['adminUsers'],
     queryFn: async () => {
-      const token = localStorage.getItem("admin_token");
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/users`, {
-        headers: { Authorization: `Bearer ${token}` },
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users`, {
+        credentials: "include",
       });
       if (!response.ok) throw new Error("Failed to fetch users");
       return response.json();
@@ -41,13 +40,12 @@ export function AdminUsersTable() {
     const payload = Object.fromEntries(formData);
 
     try {
-      const token = localStorage.getItem("admin_token");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/users`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -71,13 +69,12 @@ export function AdminUsersTable() {
     const payload = Object.fromEntries(formData);
 
     try {
-      const token = localStorage.getItem("admin_token");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/users/${selectedUser.ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
         },
+        credentials: "include",
         body: JSON.stringify(payload),
       });
 
@@ -97,12 +94,9 @@ export function AdminUsersTable() {
   const handleDeleteSubmit = async () => {
     if (!selectedUser) return;
     try {
-      const token = localStorage.getItem("admin_token");
-      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/admin/users/${selectedUser.ID}`, {
+      const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${selectedUser.ID}`, {
         method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        credentials: "include",
       });
 
       if (res.ok) {

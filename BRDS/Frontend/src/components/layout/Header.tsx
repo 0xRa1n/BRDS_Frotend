@@ -9,7 +9,7 @@ import { toast } from "sonner";
 export function Header() {
   const navigate = useNavigate();
   const { language, setLanguage, t } = useLanguage();
-  const token = localStorage.getItem("jwt_token");
+  const token = localStorage.getItem("is_authenticated");
   const [profile, setProfile] = useState<any>(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
@@ -46,8 +46,11 @@ export function Header() {
     setIsLogoutModalOpen(true);
   };
 
-  const confirmLogout = () => {
-    localStorage.removeItem("jwt_token");
+  const confirmLogout = async () => {
+    try {
+      await api.auth.logout();
+    } catch (e) {}
+    localStorage.removeItem("is_authenticated");
     setProfile(null);
     setIsLogoutModalOpen(false);
     navigate("/");

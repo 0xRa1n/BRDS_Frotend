@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { ChevronLeft, ChevronRight, RefreshCw, Clock } from "lucide-react";
+import { ChevronLeft, ChevronRight, RefreshCw, Clock, X, FileText, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { SetAppointmentModal } from "@/components/admin/SetAppointmentModal";
 
 interface Props {
   requests: any[];
@@ -11,6 +12,8 @@ interface Props {
 
 export function AdminScheduleList({ requests, isLoading, isFetching, refetch }: Props) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [selectedRequest, setSelectedRequest] = useState<any>(null);
+  const [editRequest, setEditRequest] = useState<any>(null);
 
   const handlePrevDay = () => {
     setCurrentDate(prev => {
@@ -117,14 +120,100 @@ export function AdminScheduleList({ requests, isLoading, isFetching, refetch }: 
                   </div>
                 </div>
                 <div className="flex items-center gap-2">
-                  <Button variant="outline" className="h-9">Edit</Button>
-                  <Button variant="outline" className="h-9">Details</Button>
+                  <Button variant="outline" className="h-9" onClick={() => setEditRequest(req)}>Edit</Button>
+                  <Button variant="outline" className="h-9" onClick={() => setSelectedRequest(req)}>Details</Button>
                 </div>
               </div>
             );
           })
         )}
       </div>
+
+      {selectedRequest && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+          <div className="bg-white rounded-lg shadow-xl w-full max-w-md mx-4 overflow-hidden">
+            <div className="flex items-center justify-between p-4 border-b border-gray-100">
+              <h3 className="font-semibold text-lg text-gray-900">Appointment Details</h3>
+              <button 
+                onClick={() => setSelectedRequest(null)}
+                className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            
+            <div className="p-5 flex flex-col gap-5">
+              <div>
+                <div className="flex justify-between items-start mb-1">
+                  <h4 className="text-xl font-bold text-gray-900">{selectedRequest.user?.full_name || 'N/A'}</h4>
+                  <span className={`text-xs font-semibold px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
+                    selectedRequest.status === 'Confirmed' ? 'bg-emerald-100 text-emerald-700' :
+                    selectedRequest.status === 'Pending Reschedule' ? 'bg-amber-100 text-amber-700' :
+                    selectedRequest.status === 'Missed' ? 'bg-red-100 text-red-700' :
+                    'bg-blue-100 text-blue-700'
+                  }`}>
+                    {selectedRequest.status}
+                  </span>
+                </div>
+                <p className="text-sm text-gray-500">Reference No: {selectedRequest.reference_number}</p>
+              </div>
+
+              <div className="border border-gray-100 rounded-lg p-4 flex flex-col gap-4 bg-gray-50/50">
+                <div className="flex items-start gap-3">
+                  <FileText className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Document Requested</p>
+                    <p className="text-sm font-medium text-gray-900">{selectedRequest.document_type}</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Calendar className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Appointment Date</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {new Date(selectedRequest.appointment_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Clock className="w-5 h-5 text-gray-400 mt-0.5" />
+                  <div>
+                    <p className="text-xs text-gray-500 mb-0.5">Appointment Time</p>
+                    <p className="text-sm font-medium text-gray-900">
+                      {new Date(selectedRequest.appointment_date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-end gap-3 p-4 border-t border-gray-100">
+              <Button variant="outline" onClick={() => setSelectedRequest(null)} className="text-gray-600">
+                Close
+              </Button>
+              <Button 
+                className="bg-emerald-600 hover:bg-emerald-700 text-white"
+                onClick={() => {
+                  setEditRequest(selectedRequest);
+                  setSelectedRequest(null);
+                }}
+              >
+                Edit Appointment
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <SetAppointmentModal 
+        isOpen={!!editRequest}
+        onClose={() => setEditRequest(null)}
+        request={editRequest}
+        onSuccess={() => {
+          setEditRequest(null);
+          refetch();
+        }}
+      />
     </div>
   );
 }

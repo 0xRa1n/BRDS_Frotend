@@ -19,7 +19,7 @@ export function AdminLoginPage() {
     try {
       setIsLoading(true);
       const res = await api.admin.login({ username, password });
-      localStorage.setItem("admin_token", res.token);
+      // localStorage.setItem("admin_token", res.token); // Token is now set as HttpOnly cookie by backend
       localStorage.setItem("admin_role", res.role);
       if (res.fullName) {
         localStorage.setItem("admin_full_name", res.fullName);
