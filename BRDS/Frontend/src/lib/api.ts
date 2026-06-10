@@ -95,7 +95,7 @@ export const api = {
   admin: {
     login: async (data: any) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/login`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/login`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -110,7 +110,7 @@ export const api = {
       return response.json();
     },
     getRequests: async (status?: string) => {
-      const url = new URL(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests`);
+      const url = new URL(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests`);
       if (status && status !== "All") url.searchParams.append("status", status);
       
       const response = await fetch(url.toString(), {
@@ -122,7 +122,7 @@ export const api = {
     },
     createRequest: async (data: any) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests`,
         {
           method: "POST",
           headers: getAdminAuthHeaders(),
@@ -138,7 +138,7 @@ export const api = {
     },
     getRequest: async (id: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests/${id}`,
         {
           headers: getAdminAuthHeaders(),
           credentials: "include",
@@ -149,7 +149,7 @@ export const api = {
     },
     updateStatus: async (id: string, status: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}/status`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests/${id}/status`,
         {
           method: "PUT",
           headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
@@ -162,7 +162,7 @@ export const api = {
     },
     setAppointment: async (id: string, appointmentDate: string, appointmentTime: string, status: string) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${id}/appointment`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests/${id}/appointment`,
         {
           method: "PUT",
           headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
@@ -174,7 +174,7 @@ export const api = {
       return response.json();
     },
     getPortalUsers: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users?type=users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/users?type=users`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -182,7 +182,7 @@ export const api = {
       return response.json();
     },
     updatePortalUser: async (id: string, data: any) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${id}?type=users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/users/${id}?type=users`, {
         method: "PUT",
         headers: { ...getAdminAuthHeaders(), "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -195,7 +195,7 @@ export const api = {
       return response.json();
     },
     deletePortalUser: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/users/${id}?type=users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/users/${id}?type=users`, {
         method: "DELETE",
         headers: getAdminAuthHeaders(),
         credentials: "include",
@@ -204,7 +204,7 @@ export const api = {
       return response.json();
     },
     getArchivedAdmins: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users?type=staffs`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/archives/users?type=staffs`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -212,7 +212,7 @@ export const api = {
       return response.json();
     },
     recoverAdmin: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover?type=staffs`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/archives/users/${id}/recover?type=staffs`, {
         method: "POST",
         headers: getAdminAuthHeaders(),
         credentials: "include",
@@ -221,7 +221,7 @@ export const api = {
       return response.json();
     },
     getArchivedPortalUsers: async () => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users?type=users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/archives/users?type=users`, {
         headers: getAdminAuthHeaders(),
         credentials: "include",
       });
@@ -229,7 +229,7 @@ export const api = {
       return response.json();
     },
     recoverPortalUser: async (id: string) => {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/archives/users/${id}/recover?type=users`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/archives/users/${id}/recover?type=users`, {
         method: "POST",
         headers: getAdminAuthHeaders(),
         credentials: "include",
@@ -241,7 +241,7 @@ export const api = {
   user: {
     getProfile: async () => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/user/profile`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/users/profile`,
         {
           method: "GET",
           headers: getAuthHeaders(),
@@ -255,7 +255,7 @@ export const api = {
     },
     updateProfile: async (data: ProfileUpdateRequest) => {
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/user/profile`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/users/profile`,
         {
           method: "PUT",
           headers: getAuthHeaders(),
@@ -274,7 +274,7 @@ export const api = {
     submit: async (data: any, idempotencyKey: string) => {
       const headers = getAuthHeaders();
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/request`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/requests`,
         {
           method: "POST",
           headers: { ...headers, "Idempotency-Key": idempotencyKey },
@@ -291,7 +291,7 @@ export const api = {
     getList: async (page = 1, limit = 10) => {
       const headers = getAuthHeaders();
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/request?page=${page}&limit=${limit}`,
+        `${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api/v1"}/requests?page=${page}&limit=${limit}`,
         {
           method: "GET",
           headers,

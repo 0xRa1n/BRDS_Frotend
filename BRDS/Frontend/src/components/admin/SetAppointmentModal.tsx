@@ -50,7 +50,7 @@ export function SetAppointmentModal({ isOpen, onClose, request, onSuccess }: Pro
       const dateChanged = date !== existingDateStr || time !== existingTimeStr;
       if (dateChanged && date && time) {
         const appointmentDate = new Date(`${date}T${time}:00`);
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${request.ID}/appointment`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests/${request.ID}/appointment`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export function SetAppointmentModal({ isOpen, onClose, request, onSuccess }: Pro
 
       // If we changed date, the backend forces status to "Confirmed". If our local status is not "Confirmed", we must override it.
       if (statusChanged || documentTypeChanged || (dateChanged && status !== "Confirmed")) {
-        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admin/requests/${request.ID}/status`, {
+        const res = await fetch(`${import.meta.env.VITE_API_BASE_URL || "http://localhost:8080"}/api/v1/admins/requests/${request.ID}/status`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
